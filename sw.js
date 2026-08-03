@@ -1,4 +1,4 @@
-const CACHE_NAME = 'Festivales-con-acampada-2026-v1';
+const CACHE_NAME = 'Festivales-con-acampada-2026-v2';
 const BASE_PATH = '/festivales/';
 
 const urlsToCache = [
