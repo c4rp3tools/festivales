@@ -1,0 +1,3651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Festivales con acampada · 2026</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+/* ===== ESTILOS COMPLETOS ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Roboto,sans-serif;background:#f7f4ec;color:#1e2b25;padding:1.5rem;transition:background 0.3s,color 0.3s;color-scheme:light}
+body.modal-abierto{overflow:hidden}
+body.dark{background:#1a1e1c;color:#e8e0d4;color-scheme:dark}
+body.dark .filtros-panel{background:#2a2f2d;color:#e8e0d4}
+body.dark .filtros-panel input,body.dark .filtros-panel select{background:#1a1e1c;border-color:#3d4a44;color:#e8e0d4}
+body.dark .filtros-panel label{color:#b8b0a0}
+body.dark .tarjeta{background:#2a2f2d;border-color:#3d4a44;color:#e8e0d4}
+body.dark .tarjeta .lugar{color:#b8b0a0}
+body.dark .tarjeta .fecha{color:#9a9080}
+body.dark .tarjeta .tag{background:#3d4a44;color:#e8e0d4}
+body.dark .tarjeta .tag-ok{background:#1e4a3a;color:#9ae0c0}
+body.dark .tarjeta .tag-pasado{background:#4a2a24;color:#e0a090}
+body.dark .tarjeta--fila{background:#2a2f2d}
+body.dark .fila-detalles .lugar{color:#b8b0a0}
+body.dark .fila-detalles .tag{background:#3d4a44;color:#e8e0d4}
+body.dark .fila-detalles .tag-ok{background:#1e4a3a;color:#9ae0c0}
+body.dark .lista-densa{background:#2a2f2d}
+body.dark .tarjeta--densa{border-bottom-color:#3d4a44}
+body.dark .tarjeta--densa:hover{background:#323835}
+body.dark .densa-lugar{color:#b8b0a0}
+body.dark .densa-fecha{color:#9a9080}
+body.dark .map-card{background:#2a2f2d;border-color:#3d4a44}
+body.dark .map-card .tit{color:#e8e0d4}
+body.dark .add-section{background:#2a2f2d;border-color:#3d4a44;color:#e8e0d4}
+body.dark .add-section input,body.dark .add-section select{background:#1a1e1c;border-color:#3d4a44;color:#e8e0d4}
+body.dark .add-section label{color:#b8b0a0}
+body.dark .add-section .hint{color:#9a9080}
+body.dark .modal-box{background:#2a2f2d;color:#e8e0d4}
+body.dark .modal-box .sub{color:#b8b0a0}
+body.dark .modal-box .detalle .etq{color:#9a9080}
+body.dark .modal-box .edit-grid input{background:#1a1e1c;border-color:#3d4a44;color:#e8e0d4}
+body.dark .modal-box .edit-grid label{color:#b8b0a0}
+body.dark .modal-close{color:#b8b0a0}
+body.dark .modal-close:hover{color:#e8e0d4}
+body.dark .btn-reset{background:#3d4a44;color:#e8e0d4}
+body.dark .btn-reset:hover{background:#4d5a54}
+body.dark .ghost-btn{background:transparent;border-color:#3d4a44;color:#e8e0d4}
+body.dark .ghost-btn:hover{border-color:#c47b4a}
+body.dark .sub{color:#b8b0a0}
+body.dark .estado span{color:#b8b0a0}
+body.dark .estado .badge{opacity:0.9}
+body.dark .orden-bar span{color:#b8b0a0}
+body.dark .orden-bar select{background:#1a1e1c;border-color:#3d4a44;color:#e8e0d4}
+body.dark .leyenda{color:#b8b0a0}
+body.dark .empty-msg{color:#9a9080}
+body.dark .form-msg.ok{color:#9ae0c0}
+body.dark .form-msg.err{color:#e0a090}
+body.dark .add-toggle{background:#2a2f2d;border-color:#3d4a44;color:#e8e0d4}
+body.dark .add-toggle:hover{background:#353c39}
+body.dark .config-btn{background:#2a2f2d;border-color:#3d4a44;color:#e8e0d4}
+body.dark .config-btn:hover{background:#353c39}
+body.dark .config-menu{background:#2a2f2d;border-color:#3d4a44}
+body.dark .config-menu button{color:#e8e0d4}
+body.dark .config-menu button:hover{background:#353c39}
+body.dark .config-menu .sep{background:#3d4a44}
+body.dark #map{background:#2a2f2d}
+body.dark .filtro-texto{color:#b8b0a0}
+body.dark .filtro-texto:hover{color:#e8e0d4}
+body.dark .assistant-modal .modal-box{background:#2a2f2d;color:#e8e0d4}
+body.dark .assistant-modal .modal-box input,body.dark .assistant-modal .modal-box textarea{background:#1a1e1c;border-color:#3d4a44;color:#e8e0d4}
+body.dark .assistant-modal .modal-box label{color:#b8b0a0}
+body.dark .assistant-modal .modal-box .result-preview{background:#1a1e1c;border-color:#3d4a44}
+body.dark .assistant-modal .modal-box .result-preview .field{border-bottom-color:rgba(255,255,255,0.08)}
+body.dark .assistant-modal .modal-box .result-preview .field .label{color:#9a9080}
+body.dark .assistant-modal .modal-box .result-preview .field .value{color:#e8e0d4}
+body.dark .resumen-container{background:#1a1e1c;border-color:#3d4a44}
+body.dark .resumen-container .cargando{color:#9a9080}
+body.dark .assistant-modal .thumb button{background:rgba(255,255,255,0.3);color:#1a1e1c}
+
+h1{font-size:1.35rem;margin-bottom:0.25rem;white-space:nowrap}
+.sub{color:#4d665d;margin-bottom:1.5rem;font-size:1rem;transition:color 0.3s}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem}
+.header-left{flex:1}
+
+.estado{display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem;font-size:0.9rem}
+.estado span{display:flex;align-items:center;gap:0.4rem}
+.badge{display:inline-block;width:12px;height:12px;border-radius:50%}
+.badge-verde{background:#3a9b6e}
+.badge-naranja{background:#e0a93a}
+.badge-rojo{background:#b23a2e}
+
+.config-btn{background:none;border:1px solid #d9d0c4;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;transition:background 0.2s,transform 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#fff;color:#1e2b25;position:relative}
+.config-btn:hover{background:#f0ebe3;transform:rotate(60deg)}
+.config-dropdown{position:relative;display:inline-block}
+.config-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.15);min-width:200px;padding:0.4rem 0;z-index:500;border:1px solid #ede8e0;overflow:hidden}
+.config-menu.open{display:block}
+.config-menu button{display:flex;align-items:center;gap:0.6rem;width:100%;padding:0.6rem 1.2rem;border:none;background:none;text-align:left;font-size:0.9rem;cursor:pointer;color:#1e2b25;font-family:inherit;transition:background 0.15s}
+.config-menu button:hover{background:#f0ebe3}
+.config-menu .sep{height:1px;background:#ede8e0;margin:0.2rem 1rem}
+
+.filtro-texto{background:none;border:none;font-size:0.85rem;cursor:pointer;color:#4d665d;font-family:inherit;padding:0.2rem 0.4rem;transition:color 0.3s;display:flex;align-items:center;gap:0.3rem}
+.filtro-texto:hover{color:#c47b4a}
+.filtro-texto .chev{transition:transform 0.25s;display:inline-block;font-size:0.6rem}
+
+.buscar-inline{padding:0.4rem 0.7rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.85rem;background:#fff;min-width:160px;max-width:220px;flex:0 1 220px;transition:background 0.3s,border-color 0.3s,color 0.3s}
+.buscar-inline:focus{outline:2px solid #c47b4a;border-color:transparent}
+body.dark .buscar-inline{background:#2a2f2d;border-color:#3d4a44;color:#e8e0d4}
+
+.buscar-wrapper{position:relative}
+.buscar-resultados{display:none;position:absolute;top:calc(100% + 6px);left:0;width:280px;max-width:80vw;max-height:320px;overflow-y:auto;background:#fff;border:1px solid #d9d0c4;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.15);z-index:1200}
+.buscar-resultados.open{display:block}
+.buscar-resultados .item{padding:0.5rem 0.8rem;cursor:pointer;font-size:0.85rem;border-bottom:1px solid #ede8e0}
+.buscar-resultados .item:last-child{border-bottom:none}
+.buscar-resultados .item:hover,.buscar-resultados .item.activo{background:#f0ebe3}
+.buscar-resultados .item .n{font-weight:600}
+.buscar-resultados .item .l{font-size:0.75rem;color:#6e7f76;margin-top:0.1rem}
+.buscar-resultados .vacio{padding:0.6rem 0.8rem 0.3rem;font-size:0.8rem;color:#6e7f76}
+.buscar-resultados .buscar-ia-btn{display:block;width:calc(100% - 1.2rem);margin:0.5rem 0.6rem 0.6rem;padding:0.5rem 0.7rem;border-radius:8px;border:none;background:#c47b4a;color:#fff;font-weight:600;font-size:0.85rem;cursor:pointer;font-family:inherit;transition:background 0.2s}
+.buscar-resultados .buscar-ia-btn:hover{background:#a8653b}
+
+.fab-scroll-top{position:fixed;bottom:22px;right:20px;width:44px;height:44px;border-radius:50%;background:#c47b4a;color:#fff;border:none;font-size:1.3rem;font-weight:700;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;z-index:900;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.2s,transform 0.2s,background 0.2s}
+.fab-scroll-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.fab-scroll-top:hover{background:#a8653b}
+
+.tarjeta.tarjeta-nueva{animation:destacarTarjeta 2.2s ease}
+@keyframes destacarTarjeta{
+  0%{box-shadow:0 0 0 3px #c47b4a;}
+  80%{box-shadow:0 0 0 3px #c47b4a;}
+  100%{box-shadow:0 0 0 0 rgba(196,123,74,0);}
+}
+body.dark .buscar-resultados{background:#2a2f2d;border-color:#3d4a44}
+body.dark .buscar-resultados .item{border-bottom-color:#3d4a44}
+body.dark .buscar-resultados .item:hover,body.dark .buscar-resultados .item.activo{background:#353c39}
+body.dark .buscar-resultados .item .n{color:#e8e0d4}
+body.dark .buscar-resultados .item .l{color:#9a9080}
+body.dark .buscar-resultados .vacio{color:#9a9080}
+
+.filtros-panel{background:#fff;border-radius:12px;padding:0 1.2rem;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease,background 0.3s;box-shadow:0 2px 8px rgba(0,0,0,0.04);margin-top:0.2rem}
+.filtros-panel.open{max-height:800px;padding:1.2rem;overflow:visible}
+.filtros-grid{display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center}
+.filtros-grid input,.filtros-grid select{padding:0.5rem 0.75rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.9rem;background:#fff;min-width:140px;flex:1 0 auto;transition:background 0.3s,border-color 0.3s,color 0.3s}
+.filtros-grid input:focus,.filtros-grid select:focus{outline:2px solid #c47b4a;border-color:transparent}
+.filtros-grid label{display:flex;align-items:center;gap:0.4rem;font-size:0.9rem;color:#3d5248;white-space:nowrap;transition:color 0.3s}
+.filtros-grid input[type="checkbox"]{flex:0 0 auto;width:16px;height:16px;min-width:0;padding:0;margin:0;accent-color:#c47b4a}
+
+.filtro-chip{display:flex;align-items:center;gap:0.4rem;background:#f7f4ec;border:1px solid #d9d0c4;border-radius:20px;padding:0.5rem 0.9rem;font-size:0.85rem;color:#3d5248;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background 0.2s,border-color 0.2s,color 0.2s}
+.filtro-chip:hover{background:#f0ebe3}
+.filtro-chip.activo{border-color:#c47b4a;color:#a8653b;font-weight:600}
+.filtro-chip .chev{transition:transform 0.2s;font-size:0.65rem;color:#9a9080}
+.filtro-chip.abierto .chev{transform:rotate(180deg)}
+body.dark .filtro-chip{background:#242927;border-color:#3d4a44;color:#e8e0d4}
+body.dark .filtro-chip:hover{background:#2c3230}
+body.dark .filtro-chip.activo{border-color:#c47b4a;color:#e0a878}
+.btn-reset{background:#e8e0d4;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-weight:500;transition:background 0.3s,color 0.3s}
+.btn-reset:hover{background:#d5cbbe}
+
+.main-grid{display:grid;grid-template-columns:1fr 1.8fr;gap:1.2rem;margin-top:1.2rem}
+.main-grid > *{min-width:0}
+@media(max-width:900px){.main-grid{grid-template-columns:1fr}}
+#map{height:460px;border-radius:14px;background:#e8e0d4;width:100%;transition:background 0.3s}
+.map-card{background:#fff;border-radius:14px;padding:0.8rem;box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:background 0.3s,border-color 0.3s}
+
+/* ===== Pestañas Mapa / Calendario ===== */
+.tabs-mapa-cal{display:flex;justify-content:center;gap:1.4rem;margin-bottom:0.6rem}
+.tab-mapa-cal{background:none;border:none;padding:0.4rem 0.2rem;font-size:1rem;font-weight:700;color:#9a9080;cursor:pointer;font-family:inherit;border-bottom:3px solid transparent;transition:color 0.2s,border-color 0.2s}
+.tab-mapa-cal.activa{color:#1e2b25;border-bottom-color:#c47b4a}
+body.dark .tab-mapa-cal.activa{color:#e8e0d4}
+
+/* ===== Calendario ===== */
+.cal-header{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:0.5rem}
+.cal-nav{background:#f0ebe3;border:none;width:32px;height:32px;border-radius:50%;font-size:1.1rem;cursor:pointer;color:#3d5248;transition:background 0.2s}
+.cal-nav:hover{background:#e3d9c9}
+.cal-titulo-mes{background:none;border:none;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;color:#1e2b25;padding:0.3rem 0.6rem;border-radius:8px;transition:background 0.2s}
+.cal-titulo-mes:hover{background:#f0ebe3}
+.cal-titulo-mes.cal-mes-sel{background:#c47b4a;color:#fff}
+.cal-dias-semana{display:grid;grid-template-columns:24px repeat(7,1fr);gap:0;font-size:0.7rem;color:#9a9080;text-align:center;padding-bottom:0.2rem}
+.cal-dias-semana span:first-child{visibility:hidden}
+.cal-semana{display:flex}
+.cal-semana-selector{flex:0 0 24px;cursor:pointer;border-radius:6px;transition:background 0.2s}
+.cal-semana-selector:hover{background:#f0ebe3}
+.cal-dias-wrap{position:relative;flex:1}
+.cal-dias-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-dia{min-height:44px;border-radius:6px;cursor:pointer;padding:0.15rem 0.1rem 0.2rem;text-align:center;transition:background 0.15s}
+.cal-dia:hover{background:#f0ebe3}
+.cal-dia-num{font-size:0.78rem;color:#3d5248}
+.cal-dia-otromes .cal-dia-num{color:#c8c0b0}
+.cal-dia-hoy .cal-dia-num{display:inline-block;background:#c47b4a;color:#fff;border-radius:50%;width:20px;height:20px;line-height:20px}
+.cal-dia-sel{background:#e9dfd0}
+.cal-dia-eventos{width:100%}
+.cal-overlay{position:absolute;left:0;right:0;top:22px;pointer-events:none}
+.cal-barra{position:absolute;height:6px;border-radius:3px}
+.cal-mas{position:absolute;font-size:0.6rem;font-weight:700;color:#9a9080;text-align:center;width:calc(100%/7)}
+body.dark .cal-nav{background:#353c39;color:#e8e0d4}
+body.dark .cal-nav:hover{background:#3d4a44}
+body.dark .cal-titulo-mes{color:#e8e0d4}
+body.dark .cal-titulo-mes:hover{background:#353c39}
+body.dark .cal-dias-semana{color:#9a9080}
+body.dark .cal-semana-selector:hover{background:#353c39}
+body.dark .cal-dia:hover{background:#353c39}
+body.dark .cal-dia-num{color:#c8c0b0}
+body.dark .cal-dia-otromes .cal-dia-num{color:#5a5248}
+body.dark .cal-dia-sel{background:#3d4a44}
+body.dark .cal-mas{color:#6e7f76}
+.map-card .tit{font-weight:600;margin-bottom:0.5rem;font-size:0.95rem;transition:color 0.3s}
+
+.orden-bar{display:flex;gap:0.6rem;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:0.6rem;margin-bottom:-0.6rem}
+
+.vista-wrapper{position:relative}
+.vista-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:160px;background:#fff;border:1px solid #d9d0c4;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.15);z-index:600;overflow:hidden}
+.vista-menu-scroll{max-height:280px;overflow-y:auto}
+.vista-menu.open{display:block}
+.vista-opcion{display:block;width:100%;text-align:left;padding:0.55rem 0.9rem;background:none;border:none;cursor:pointer;font-size:0.85rem;font-family:inherit;color:#3d5248;transition:background 0.15s}
+.vista-opcion-separador{padding:0.4rem 0.9rem;font-size:0.72rem;color:#9a9080;text-align:center;white-space:nowrap;user-select:none}
+.vista-opcion:hover{background:#f0ebe3}
+.vista-opcion.activa{background:#c47b4a;color:#fff;font-weight:600}
+body.dark .vista-menu{background:#2a2f2d;border-color:#3d4a44}
+body.dark .vista-opcion{color:#e8e0d4}
+body.dark .vista-opcion:hover{background:#353c39}
+body.dark .vista-opcion.activa{background:#c47b4a;color:#fff}
+body.dark .vista-opcion-separador{color:#6e7f76}
+.orden-bar span{transition:color 0.3s;font-size:0.85rem}
+.orden-bar select{padding:0.4rem 0.6rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.85rem;background:#fff;transition:background 0.3s,border-color 0.3s,color 0.3s}
+.orden-bar .separador{color:#d9d0c4;font-size:0.8rem;user-select:none}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0.8rem}
+.tarjeta{background:#fff;border-radius:14px;padding:0.9rem 1.1rem;box-shadow:0 2px 8px rgba(0,0,0,0.04);border-left:4px solid #3a9b6e;transition:all 0.15s;cursor:pointer}
+.tarjeta:hover{box-shadow:0 6px 16px rgba(0,0,0,0.08)}
+.tarjeta .nombre{font-weight:700;font-size:1rem;margin-bottom:0.1rem}
+.tarjeta .lugar{color:#4d665d;font-size:0.85rem;transition:color 0.3s}
+.tarjeta .fecha{font-size:0.8rem;color:#6e7f76;margin:0.2rem 0;transition:color 0.3s}
+.tarjeta .tags{display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.3rem}
+.tarjeta .tag{background:#ede8e0;padding:0.1rem 0.5rem;border-radius:20px;font-size:0.7rem;color:#3d5248;transition:background 0.3s,color 0.3s}
+.tarjeta .tag-ok{background:#d9eee3;color:#1e5a3e}
+.tarjeta .tag-pasado{background:#f0e0de;color:#8f3d33}
+.tarjeta .enlace{display:inline-block;margin-top:0.4rem;color:#c47b4a;text-decoration:none;font-weight:500;font-size:0.8rem}
+.tarjeta .enlace:hover{text-decoration:underline}
+.user-badge{background:#c47b4a;color:#fff;padding:0.1rem 0.5rem;border-radius:12px;font-size:0.6rem;margin-left:0.4rem}
+.tarjeta .cartel-mini{max-width:100%;height:auto;margin-top:0.4rem;border-radius:8px;border:1px solid #ede8e0;max-height:80px;object-fit:cover;pointer-events:none}
+
+/* ===== Vista Mosaico (tipo Pinterest) ===== */
+.grid-mosaico{column-count:2;column-gap:0.7rem}
+@media(min-width:700px){.grid-mosaico{column-count:3}}
+@media(min-width:1000px){.grid-mosaico{column-count:4}}
+.tarjeta--mosaico{position:relative;break-inside:avoid;margin-bottom:0.7rem;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);display:block}
+.tarjeta--mosaico img{width:100%;display:block}
+.tarjeta--mosaico.mosaico-fallback{min-height:150px;display:flex;align-items:flex-end}
+.mosaico-dot{position:absolute;top:0.5rem;right:0.5rem;width:10px;height:10px;border-radius:50%;border:2px solid rgba(255,255,255,0.85);z-index:2}
+.mosaico-overlay{position:absolute;left:0;right:0;bottom:0;padding:0.7rem 0.8rem 0.6rem;background:linear-gradient(to top, rgba(0,0,0,0.78), rgba(0,0,0,0))}
+.tarjeta--mosaico.mosaico-fallback .mosaico-overlay{position:static;background:none;padding:0.8rem}
+.mosaico-nombre{color:#fff;font-weight:700;font-size:0.9rem;line-height:1.25;text-shadow:0 1px 3px rgba(0,0,0,0.4)}
+.mosaico-fecha{color:#f0ece4;font-size:0.72rem;margin-top:0.15rem;opacity:0.9}
+
+/* ===== Vista Carteles (feed a todo lo ancho, sin tarjeta ni huecos) ===== */
+.feed-instagram{display:flex;flex-direction:column;gap:0;max-width:470px;margin:0 auto;width:100%}
+.tarjeta--instagram{cursor:pointer;border:3px solid;box-sizing:border-box;background:none;border-radius:0;padding:0;box-shadow:none}
+.tarjeta--instagram:hover{box-shadow:none}
+.ig-imagen-wrap{position:relative;width:100%;background:#ede8e0}
+.ig-imagen-wrap img{width:100%;height:auto;display:block}
+.ig-imagen-wrap.ig-fallback{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
+.ig-fallback-texto{color:#fff;font-weight:700;font-size:1.15rem;text-align:center;padding:1.2rem;text-shadow:0 1px 3px rgba(0,0,0,0.35)}
+.ig-dot{position:absolute;top:0.6rem;right:0.6rem;width:11px;height:11px;border-radius:50%;border:2px solid rgba(255,255,255,0.9);z-index:2}
+.ig-caption{padding:0.6rem 0.85rem;font-size:0.85rem;line-height:1.4}
+.ig-caption-nombre{font-weight:700}
+.ig-caption-resto{color:#6e7f76;transition:color 0.3s}
+body.dark .ig-caption-resto{color:#9a9080}
+
+/* ===== Vista Fila ===== */
+.lista-fila{display:flex;flex-direction:column;gap:0.6rem}
+.tarjeta--fila{display:flex;align-items:stretch;gap:0;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04);cursor:pointer;transition:box-shadow 0.15s}
+.tarjeta--fila:hover{box-shadow:0 6px 16px rgba(0,0,0,0.08)}
+.fila-ticket{flex:0 0 56px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;padding:0.5rem 0}
+.ticket-dia{font-size:1.3rem;font-weight:800;line-height:1}
+.ticket-mes{font-size:0.65rem;font-weight:600;letter-spacing:0.03em;margin-top:0.15rem}
+.fila-detalles{flex:1;padding:0.7rem 0.9rem;min-width:0}
+.fila-detalles .nombre{font-weight:700;font-size:0.95rem}
+.fila-detalles .lugar{color:#4d665d;font-size:0.8rem;margin-top:0.1rem;transition:color 0.3s}
+.fila-detalles .tags{display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.35rem}
+.fila-detalles .tag{background:#ede8e0;padding:0.1rem 0.5rem;border-radius:20px;font-size:0.68rem;color:#3d5248;transition:background 0.3s,color 0.3s}
+.fila-detalles .tag-ok{background:#d9eee3;color:#1e5a3e}
+.fila-cartel-wrap{flex:0 0 84px;display:flex}
+.fila-cartel{width:84px;height:100%;object-fit:cover;display:block}
+.fila-cartel-wrap.fila-cartel-vacio{opacity:0.35}
+
+/* ===== Vista Densa ===== */
+.lista-densa{display:flex;flex-direction:column;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.tarjeta--densa{display:flex;align-items:center;gap:0.6rem;padding:0.55rem 0.9rem;border-bottom:1px solid #ede8e0;cursor:pointer;transition:background 0.15s;min-width:0}
+.tarjeta--densa:last-child{border-bottom:none}
+.tarjeta--densa:hover{background:#f7f4ec}
+.densa-dot{flex:0 0 8px;width:8px;height:8px;border-radius:50%}
+.densa-nombre{font-weight:600;font-size:0.85rem;flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45%;min-width:0}
+.densa-lugar{color:#4d665d;font-size:0.8rem;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color 0.3s;min-width:0}
+.densa-fecha{color:#6e7f76;font-size:0.78rem;flex:0 0 auto;transition:color 0.3s}
+
+.add-toggle{background:#fff;border:1px solid #d9d0c4;padding:0.6rem 1.2rem;border-radius:10px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:0.6rem;margin-top:1.5rem;transition:background 0.3s,border-color 0.3s,color 0.3s}
+.add-toggle:hover{background:#f0ebe3}
+.add-toggle .chev{transition:transform 0.25s;display:inline-block}
+.add-toggle.open .chev{transform:rotate(180deg)}
+.add-section{background:#fff;border-radius:14px;padding:0 1.2rem;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease,background 0.3s;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.add-section.open{max-height:900px;padding:1.2rem}
+.add-section h2{font-size:1.2rem;margin-bottom:0.2rem}
+.add-section .hint{font-size:0.85rem;color:#6e7f76;margin-bottom:0.8rem;transition:color 0.3s}
+.add-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.6rem}
+.add-grid input,.add-grid select{padding:0.4rem 0.6rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.85rem;width:100%;transition:background 0.3s,border-color 0.3s,color 0.3s}
+.add-grid label{font-size:0.75rem;color:#4d665d;display:block;margin-bottom:0.1rem;transition:color 0.3s}
+.add-actions{display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.8rem;align-items:center}
+.primary-btn{background:#c47b4a;color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:8px;cursor:pointer;font-weight:600;transition:background 0.2s}
+.primary-btn:hover{background:#a8653b}
+.ghost-btn{background:transparent;border:1px solid #d9d0c4;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;transition:all 0.2s}
+.ghost-btn:hover{border-color:#c47b4a;color:#c47b4a}
+.form-msg{font-size:0.85rem;margin-top:0.4rem}
+.form-msg.ok{color:#1e5a3e}
+.form-msg.err{color:#b23a2e}
+
+.leyenda{display:flex;gap:0.8rem;flex-wrap:wrap;font-size:0.8rem;color:#4d665d;margin-top:0.3rem;transition:color 0.3s}
+.leyenda .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:0.2rem}
+.empty-msg{padding:2rem;text-align:center;color:#6e7f76;transition:color 0.3s}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:1000;padding:1.5rem}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:18px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);padding:1.5rem;position:relative;transition:background 0.3s,color 0.3s}
+.modal-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.8rem;cursor:pointer;color:#6e7f76;transition:color 0.3s}
+.modal-close:hover{color:#1e2b25}
+.modal-box h3{font-size:1.4rem;margin-bottom:0.2rem}
+.modal-box .sub{font-size:0.9rem;color:#4d665d;transition:color 0.3s}
+.modal-box .detalle{display:grid;grid-template-columns:1fr 1fr;gap:0.4rem 1rem;margin:0.8rem 0}
+.modal-box .detalle .etq{color:#6e7f76;font-size:0.8rem;transition:color 0.3s}
+.modal-box .detalle .val{font-weight:500}
+.modal-box .cartel-img{display:block;max-width:100%;border-radius:12px;margin:0.6rem auto;border:1px solid #ede8e0;max-height:300px;cursor:pointer;transition:opacity 0.15s}
+.modal-box .cartel-img:hover{opacity:0.85}
+.carousel-cartel{margin:0.6rem 0}
+.carousel-cartel .cartel-img{margin:0 auto}
+.carousel-nav{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:0.4rem}
+.carousel-btn{background:#c47b4a;color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1.1rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s}
+.carousel-btn:hover{background:#a8653b}
+.carousel-contador{font-size:0.8rem;color:#6e7f76;min-width:3.5em;text-align:center}
+body.dark .carousel-contador{color:#9a9080}
+.modal-box .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.8rem}
+.modal-box .edit-grid input,.modal-box .edit-grid select{width:100%;padding:0.4rem 0.6rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.85rem;transition:background 0.3s,border-color 0.3s,color 0.3s}
+.modal-box .edit-grid label{font-size:0.7rem;color:#4d665d;display:block;margin-bottom:0.1rem;transition:color 0.3s}
+.modal-box .edit-grid .full{grid-column:1/-1}
+.modal-actions-bar{display:flex;gap:0.6rem;margin-top:1rem;flex-wrap:wrap}
+.modal-actions-bar .btn-edit{background:#e8e0d4;border:none;padding:0.4rem 1rem;border-radius:8px;cursor:pointer;font-size:0.85rem;transition:background 0.3s}
+.modal-actions-bar .btn-edit:hover{background:#d5cbbe}
+.modal-actions-bar .btn-save{background:#3a9b6e;color:#fff;border:none;padding:0.4rem 1.2rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem}
+.modal-actions-bar .btn-save:hover{background:#2f7d58}
+.modal-actions-bar .btn-del{background:#b23a2e;color:#fff;border:none;padding:0.4rem 1rem;border-radius:8px;cursor:pointer;font-size:0.85rem}
+.modal-actions-bar .btn-del:hover{background:#8f2e24}
+body.dark .modal-actions-bar .btn-edit{background:#3d4a44;color:#e8e0d4}
+body.dark .modal-actions-bar .btn-edit:hover{background:#4d5a54}
+
+/* Estilos para el resumen IA */
+.resumen-container{background:#f7f4ec;border:1px solid #ede8e0;border-radius:8px;padding:0.8rem;margin-top:0.8rem;display:none;transition:background 0.3s,border-color 0.3s}
+.resumen-container .cargando{color:#6e7f76;font-style:italic}
+.resumen-container .texto{font-size:0.9rem;line-height:1.5;white-space:pre-wrap}
+
+.assistant-modal .modal-box{max-width:700px}
+.assistant-modal .modal-box .input-group{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.8rem}
+.assistant-modal .modal-box .input-group label{font-size:0.85rem;font-weight:600;color:#4d665d}
+.assistant-modal .modal-box .input-group input,.assistant-modal .modal-box .input-group textarea{padding:0.6rem 0.8rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.9rem;width:100%;transition:background 0.3s,border-color 0.3s,color 0.3s}
+.assistant-modal .modal-box .input-group textarea{min-height:60px;resize:vertical;font-family:inherit}
+.assistant-modal .modal-box .result-preview{background:#f7f4ec;border:1px solid #ede8e0;border-radius:8px;padding:1rem;margin:0.8rem 0;max-height:300px;overflow-y:auto;font-size:0.85rem;white-space:pre-wrap;transition:background 0.3s,border-color 0.3s}
+.assistant-modal .modal-box .result-preview .field{display:flex;gap:0.5rem;padding:0.15rem 0;border-bottom:1px solid rgba(0,0,0,0.04)}
+.assistant-modal .modal-box .result-preview .field .label{font-weight:600;min-width:90px;color:#4d665d}
+.assistant-modal .modal-box .result-preview .field .value{color:#1e2b25}
+.assistant-modal .modal-box .assistant-actions{display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.8rem}
+.assistant-modal .modal-box .assistant-actions .btn-analyze{background:#3a9b6e;color:#fff;border:none;padding:0.5rem 1.5rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.9rem}
+.assistant-modal .modal-box .assistant-actions .btn-analyze:hover{background:#2f7d58}
+.assistant-modal .modal-box .assistant-actions .btn-analyze:disabled{opacity:0.5;cursor:not-allowed}
+.assistant-modal .modal-box .assistant-actions .btn-fill-form{background:#c47b4a;color:#fff;border:none;padding:0.5rem 1.5rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.9rem}
+.assistant-modal .modal-box .assistant-actions .btn-fill-form:hover{background:#a8653b}
+.assistant-modal .modal-box .assistant-actions .btn-fill-form:disabled{opacity:0.5;cursor:not-allowed}
+.assistant-modal .modal-box .assistant-status{padding:0.6rem 0.8rem;border-radius:8px;margin-bottom:0.8rem;font-size:0.9rem;display:none}
+.assistant-modal .modal-box .assistant-status.loading{display:block;background:#e8f0fe;color:#1e3a5f}
+.assistant-modal .modal-box .assistant-status.success{display:block;background:#e6f5e8;color:#1e5a3e}
+.assistant-modal .modal-box .assistant-status.error{display:block;background:#fde8e5;color:#8f3226}
+
+.btn-open-web{background:#c47b4a;color:#fff;border:none;padding:0.3rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;white-space:nowrap;transition:background 0.2s;height:34px;display:flex;align-items:center;gap:0.3rem}
+.btn-open-web:hover{background:#a8653b}
+.btn-open-web:disabled{opacity:0.4;cursor:not-allowed;background:#b8b0a0}
+.web-input-wrapper{display:flex;gap:0.5rem;align-items:center;width:100%}
+.cartel-principal-wrapper{display:flex;gap:0.5rem;align-items:center;width:100%}
+.cartel-principal-wrapper input{flex:1}
+.btn-add-cartel{background:#c47b4a;color:#fff;border:none;width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.2s}
+.btn-add-cartel:hover{background:#a8653b}
+.carteles-lista{display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem}
+.cartel-fila{display:flex;gap:0.5rem;align-items:center}
+.cartel-fila input{flex:1}
+.btn-quitar-cartel{background:#e3d9c9;color:#6e4a35;border:none;width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:0.85rem;flex-shrink:0;transition:background 0.2s}
+
+.perplexity-seccion-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;background:#f7f4ec;border:none;border-radius:8px;padding:0.6rem 0.8rem;font-size:0.88rem;font-weight:600;color:#1e2b25;cursor:pointer;font-family:inherit;margin-top:0.7rem;transition:background 0.2s}
+.perplexity-seccion-toggle:hover{background:#f0ebe3}
+.perplexity-seccion-toggle .chev{transition:transform 0.2s;font-size:0.7rem;color:#9a9080}
+.perplexity-seccion-toggle.abierta .chev{transform:rotate(90deg)}
+.perplexity-seccion{padding:0 0.2rem}
+body.dark .perplexity-seccion-toggle{background:#242927;color:#e8e0d4}
+body.dark .perplexity-seccion-toggle:hover{background:#2c3230}
+.btn-quitar-cartel:hover{background:#d9c9b0}
+body.dark .btn-quitar-cartel{background:#3d4a44;color:#e8e0d4}
+body.dark .btn-quitar-cartel:hover{background:#4d5c54}
+.web-input-wrapper input{flex:1}
+.marker-icon {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.thumb{position:relative;width:44px;height:44px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.1)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;top:1px;right:1px;width:16px;height:16px;border-radius:50%;border:none;background:rgba(0,0,0,0.7);color:#fff;font-size:10px;line-height:1;cursor:pointer}
+
+/* ===================== FESTIPLAYER 2000 (reproductor retro) ===================== */
+.fp-player{width:100%;max-width:320px;margin:0 auto;background:linear-gradient(180deg,#d9d5c9 0%,#b9b4a5 100%);border:2px solid #7a7568;border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.6),inset 0 -2px 4px rgba(0,0,0,0.25);padding:10px;font-family:'Courier New',monospace;user-select:none;box-sizing:border-box}
+.fp-titlebar{background:linear-gradient(180deg,#5a6b8c 0%,#2e3a52 100%);color:#e8e6da;font-size:11px;letter-spacing:1px;padding:4px 8px;border-radius:3px 3px 0 0;display:flex;justify-content:space-between;align-items:center;border:1px solid #1a2030;margin-bottom:6px}
+.fp-titlebar .fp-dots span{display:inline-block;width:7px;height:7px;border-radius:50%;background:#8a8570;border:1px solid #4a4638;margin-left:4px}
+.fp-screen{background:#9db89c;background-image:linear-gradient(180deg,#a7c0a5,#8fae8d);border:2px solid #4a5a48;border-radius:2px;padding:6px;box-shadow:inset 0 2px 6px rgba(0,0,0,0.4);margin-bottom:8px;position:relative}
+.fp-video-frame{position:relative;width:100%;height:120px;background:#14200f;border:1px solid #2b3a26;border-radius:2px;overflow:hidden}
+.fp-video-frame iframe{position:absolute;top:50%;left:50%;width:178%;height:178%;transform:translate(-50%,-50%);border:none;pointer-events:none;filter:sepia(70%) saturate(280%) hue-rotate(58deg) brightness(0.85) contrast(1.15)}
+.fp-video-frame .fp-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#4f7a4a;font-size:10px;letter-spacing:1px;text-align:center;padding:10px}
+.fp-video-frame .fp-scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.25) 0px,rgba(0,0,0,0.25) 1px,transparent 1px,transparent 3px);mix-blend-mode:multiply}
+.fp-video-frame .fp-caption{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(0deg,rgba(10,20,8,0.88) 0%,rgba(10,20,8,0) 100%);padding:14px 8px 5px 8px;pointer-events:none}
+.fp-track-name{font-size:12px;font-weight:bold;color:#d8ffd0;text-shadow:0 1px 2px rgba(0,0,0,0.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp-track-artist{font-size:10px;color:#aee0a4;text-shadow:0 1px 2px rgba(0,0,0,0.8);margin-top:1px}
+.fp-status-row{display:flex;justify-content:space-between;align-items:center;margin-top:5px;padding:0 2px;font-size:10px;color:#23431c}
+.fp-eq{display:flex;align-items:flex-end;gap:2px;height:16px}
+.fp-eq span{width:3px;background:#1f4a1a;animation:fpBounce 1s infinite ease-in-out;opacity:0.85}
+.fp-eq span:nth-child(1){animation-delay:0s;height:40%}
+.fp-eq span:nth-child(2){animation-delay:0.15s;height:80%}
+.fp-eq span:nth-child(3){animation-delay:0.3s;height:55%}
+.fp-eq span:nth-child(4){animation-delay:0.45s;height:90%}
+.fp-eq span:nth-child(5){animation-delay:0.2s;height:30%}
+.fp-eq.fp-paused span{animation-play-state:paused;height:15% !important}
+@keyframes fpBounce{0%,100%{height:20%}50%{height:100%}}
+.fp-controls{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.fp-btn{width:34px;height:26px;background:linear-gradient(180deg,#f0ede4 0%,#c9c4b4 100%);border:1px solid #7a7568;border-radius:3px;box-shadow:0 2px 0 rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.7);cursor:pointer;font-size:12px;color:#2e2c26;display:flex;align-items:center;justify-content:center}
+.fp-btn:active{transform:translateY(2px);box-shadow:inset 0 1px 3px rgba(0,0,0,0.3)}
+.fp-btn.fp-play{width:50px;background:linear-gradient(180deg,#eae0c2 0%,#cbbd8e 100%)}
+.fp-seek-row{display:flex;align-items:center;gap:6px;padding:0 4px 8px 4px;font-size:9px;color:#4a4638}
+.fp-seek-row span{flex-shrink:0;min-width:28px;text-align:center}
+.fp-seek-row input[type="range"]{flex:1;-webkit-appearance:none;height:4px;background:#7a7568;border-radius:2px;outline:none}
+.fp-seek-row input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#4a4638;border:1px solid #2e2c26;cursor:pointer}
+.fp-playlist{background:#23241f;border:1px solid #14150f;border-radius:2px;box-shadow:inset 0 2px 6px rgba(0,0,0,0.6);max-height:260px;overflow-y:auto}
+.fp-artist{border-bottom:1px solid #1a1b16}
+.fp-artist:last-child{border-bottom:none}
+.fp-artist-header{display:flex;align-items:center;gap:8px;padding:9px 10px;cursor:pointer;font-size:12px;font-weight:bold;color:#9fe89a;background:#26281f}
+.fp-artist-header:hover{background:#33352c}
+.fp-artist-header .fp-arrow{color:#4a6b48;font-size:9px;transition:transform 0.15s;flex-shrink:0;width:10px}
+.fp-artist.fp-open .fp-artist-header .fp-arrow{transform:rotate(90deg)}
+.fp-artist.fp-open .fp-artist-header{background:#2b3a2a}
+.fp-artist-header .fp-dia{margin-left:auto;font-size:9px;color:#5c8a58;font-weight:normal;flex-shrink:0}
+.fp-songs{display:none}
+.fp-artist.fp-open .fp-songs{display:block}
+.fp-songs .fp-cargando-cancion{padding:8px 10px 8px 26px;font-size:10px;color:#5c8a58}
+.fp-track{display:flex;align-items:center;gap:8px;padding:7px 10px 7px 26px;font-size:11px;color:#6fbf6a;cursor:pointer;border-top:1px solid #1a1b16}
+.fp-track:hover{background:#2e2f27}
+.fp-track.fp-active{background:#2b4a2b;color:#baffb0}
+.fp-track .fp-num{color:#3f5c3d;width:14px;flex-shrink:0;font-size:10px}
+.fp-track.fp-active .fp-num{color:#baffb0}
+.fp-track .fp-song{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fp-footer-note{text-align:center;font-size:9px;color:#5a5648;margin-top:6px;letter-spacing:0.5px}
+.fp-hint{text-align:center;font-size:9px;color:#7a4a1c;margin-top:4px;min-height:11px}
+
+.fp-titlebar{cursor:grab}
+.fp-titlebar .fp-title-drag{pointer-events:none}
+.fp-title-btns{display:flex;gap:4px}
+.fp-title-btn{width:16px;height:16px;border:1px solid #1a2030;border-radius:2px;background:linear-gradient(180deg,#7f8fac 0%,#4a5a78 100%);color:#e8e6da;font-size:9px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.fp-title-btn:hover{background:linear-gradient(180deg,#93a1ba 0%,#5a6c8e 100%)}
+#fpBtnClose:hover{background:linear-gradient(180deg,#c85a4a 0%,#8f2e22 100%)}
+
+/* El reproductor va siempre por encima de cualquier otro modal, y su caja no lleva fondo/padding blanco */
+#reproductorModalOverlay{z-index:2000}
+#reproductorModalBox{background:transparent;padding:0;box-shadow:none;max-width:340px;border-radius:0;overflow:visible}
+
+/* Modo colapsado: solo la barra de título, anclada arriba, arrastrable, sin bloquear el resto de la web */
+#reproductorModalOverlay.fp-collapsed{background:transparent;backdrop-filter:none;pointer-events:none;padding:0;align-items:flex-start;justify-content:flex-start}
+#reproductorModalOverlay.fp-collapsed #reproductorModalBox{pointer-events:auto;position:fixed;width:260px;max-width:260px}
+#reproductorModalOverlay.fp-collapsed .fp-player{max-width:260px;padding:0;background:none;border:none;box-shadow:none}
+#reproductorModalOverlay.fp-collapsed .fp-screen,
+#reproductorModalOverlay.fp-collapsed .fp-controls,
+#reproductorModalOverlay.fp-collapsed .fp-seek-row,
+#reproductorModalOverlay.fp-collapsed .fp-playlist,
+#reproductorModalOverlay.fp-collapsed .fp-footer-note,
+#reproductorModalOverlay.fp-collapsed .fp-hint{display:none}
+#reproductorModalOverlay.fp-collapsed .fp-titlebar{margin-bottom:0;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,0.4)}
+</style>
+  <link rel="manifest" href="/htmltopwa/manifest.json">
+  <link rel="apple-touch-icon" href="/htmltopwa/icon-192.png">
+  <meta name="theme-color" content="#f7f4ec">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+
+<div class="header-top">
+  <div class="header-left">
+    <h1>🏕️ Festivales con acampada</h1>
+  </div>
+  <div class="config-dropdown">
+    <button class="config-btn" id="configBtn" title="Configuración">⚙️</button>
+    <div class="config-menu" id="configMenu">
+      <button id="btnToggleTema">🌓 Alternar tema oscuro</button>
+      <div class="sep"></div>
+      <button id="btnConfigSupabase">🗄️ Configurar Supabase</button>
+      <div class="sep"></div>
+      <button id="btnConfigPerplexity">🔑 Configurar Perplexity</button>
+      <div class="sep"></div>
+      <button id="btnConfigYoutube">🎬 Configurar YouTube</button>
+      <div class="sep"></div>
+      <button id="btnAsistenteIA">🤖 Asistente IA: buscar festival</button>
+    </div>
+  </div>
+</div>
+
+<div class="estado">
+  <div class="buscar-wrapper">
+    <input type="text" id="buscar" class="buscar-inline" placeholder="🔎 Buscar..." autocomplete="off">
+    <div class="buscar-resultados" id="buscarResultados"></div>
+  </div>
+  <span style="margin-left:auto;">🎯 <span id="contador">0</span> festivales</span>
+</div>
+
+<div class="main-grid">
+  <div class="map-card">
+    <div class="tabs-mapa-cal">
+      <button type="button" class="tab-mapa-cal activa" id="tabMapa">🗺️ Mapa</button>
+      <button type="button" class="tab-mapa-cal" id="tabCalendario">📅 Calendario</button>
+    </div>
+    <div id="panelMapa" class="panel-mapa-cal">
+      <div id="map"></div>
+      <div class="leyenda">
+        <span><span class="dot" style="background:#3a9b6e"></span>Próximo</span>
+        <span><span class="dot" style="background:#e0a93a"></span>En curso</span>
+        <span><span class="dot" style="background:#b23a2e"></span>Pasado</span>
+      </div>
+    </div>
+    <div id="panelCalendario" class="panel-mapa-cal" style="display:none">
+      <div class="cal-header">
+        <button type="button" class="cal-nav" id="calMesAnterior">‹</button>
+        <button type="button" class="cal-titulo-mes" id="calTituloMes" title="Ver mes completo">Julio 2026</button>
+        <button type="button" class="cal-nav" id="calMesSiguiente">›</button>
+      </div>
+      <div class="cal-dias-semana">
+        <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+      </div>
+      <div id="calGrid" class="cal-grid"></div>
+    </div>
+  </div>
+<div class="orden-bar">
+  <div class="vista-wrapper">
+    <button class="filtro-texto" id="toggleOrden">↕️ Ordenar <span class="chev">▾</span></button>
+    <div class="vista-menu" id="ordenMenu">
+      <button type="button" class="vista-opcion" data-orden="fecha">Fecha (más cercano)</button>
+      <button type="button" class="vista-opcion" data-orden="fecha-lejos">Fecha (más lejano)</button>
+      <button type="button" class="vista-opcion" data-orden="nombre">Nombre (A-Z)</button>
+      <button type="button" class="vista-opcion" data-orden="ccaa">Comunidad (A-Z)</button>
+    </div>
+  </div>
+  <span class="separador">|</span>
+  <button class="filtro-texto" id="toggleFiltros">🔎 Filtros <span class="chev">▾</span></button>
+  <span class="separador">|</span>
+  <div class="vista-wrapper">
+    <button class="filtro-texto" id="toggleVista">🖼️ Vista <span class="chev">▾</span></button>
+    <div class="vista-menu" id="vistaMenu">
+      <button type="button" class="vista-opcion" data-vista="tarjetas">🗂️ Tarjetas</button>
+      <button type="button" class="vista-opcion" data-vista="mosaico">🖼️ Mosaico</button>
+      <button type="button" class="vista-opcion" data-vista="carteles">🪧 Carteles</button>
+      <button type="button" class="vista-opcion" data-vista="fila">📋 Fila</button>
+      <button type="button" class="vista-opcion" data-vista="densa">📃 Densa</button>
+    </div>
+
+  </div>
+</div>
+<div class="filtros-panel" id="filtrosPanel">
+  <div class="filtros-grid">
+    <div class="vista-wrapper">
+      <button type="button" class="filtro-chip" id="btnFiltroCCAA"><span class="filtro-chip-label">Todas las CCAA</span><span class="chev">▾</span></button>
+      <div class="vista-menu vista-menu-scroll" id="menuFiltroCCAA" data-etiqueta="Todas las CCAA"></div>
+    </div>
+    <div class="vista-wrapper">
+      <button type="button" class="filtro-chip" id="btnFiltroEstilo"><span class="filtro-chip-label">Todos los estilos</span><span class="chev">▾</span></button>
+      <div class="vista-menu vista-menu-scroll" id="menuFiltroEstilo" data-etiqueta="Todos los estilos"></div>
+    </div>
+    <div class="vista-wrapper">
+      <button type="button" class="filtro-chip" id="btnFiltroMes"><span class="filtro-chip-label">Todos los meses</span><span class="chev">▾</span></button>
+      <div class="vista-menu vista-menu-scroll" id="menuFiltroMes">
+        <button type="button" class="vista-opcion activa" data-value="">Todos los meses</button>
+        <button type="button" class="vista-opcion" data-value="0">Enero</button>
+        <button type="button" class="vista-opcion" data-value="1">Febrero</button>
+        <button type="button" class="vista-opcion" data-value="2">Marzo</button>
+        <button type="button" class="vista-opcion" data-value="3">Abril</button>
+        <button type="button" class="vista-opcion" data-value="4">Mayo</button>
+        <button type="button" class="vista-opcion" data-value="5">Junio</button>
+        <button type="button" class="vista-opcion" data-value="6">Julio</button>
+        <button type="button" class="vista-opcion" data-value="7">Agosto</button>
+        <button type="button" class="vista-opcion" data-value="8">Septiembre</button>
+        <button type="button" class="vista-opcion" data-value="9">Octubre</button>
+        <button type="button" class="vista-opcion" data-value="10">Noviembre</button>
+        <button type="button" class="vista-opcion" data-value="11">Diciembre</button>
+      </div>
+    </div>
+    <div class="vista-wrapper">
+      <button type="button" class="filtro-chip" id="btnFiltroPrecio"><span class="filtro-chip-label">Cualquier precio</span><span class="chev">▾</span></button>
+      <div class="vista-menu" id="menuFiltroPrecio">
+        <button type="button" class="vista-opcion activa" data-value="">Cualquier precio</button>
+        <button type="button" class="vista-opcion" data-value="gratis">Gratis</button>
+        <button type="button" class="vista-opcion" data-value="pago">De pago</button>
+        <button type="button" class="vista-opcion" data-value="pago_solidario">Pago solidario</button>
+        <button type="button" class="vista-opcion" data-value="desconocido">Sin confirmar</button>
+      </div>
+    </div>
+    <div class="vista-wrapper">
+      <button type="button" class="filtro-chip" id="btnFiltroAcampada"><span class="filtro-chip-label">Cualquier acampada</span><span class="chev">▾</span></button>
+      <div class="vista-menu" id="menuFiltroAcampada">
+        <button type="button" class="vista-opcion activa" data-value="">Cualquier acampada</button>
+        <button type="button" class="vista-opcion" data-value="gratis">Gratuita</button>
+        <button type="button" class="vista-opcion" data-value="pago">De pago</button>
+        <button type="button" class="vista-opcion" data-value="no">Sin acampada</button>
+        <button type="button" class="vista-opcion" data-value="desconocido">Sin confirmar</button>
+      </div>
+    </div>
+    <label><input type="checkbox" id="soloProximos" checked> Solo próximos</label>
+    <button class="btn-reset" id="resetFiltros">Limpiar</button>
+  </div>
+</div>
+  <div>
+    <div class="grid" id="contenedor"></div>
+  </div>
+</div>
+
+
+
+<button class="add-toggle" id="toggleAdd">➕ Añadir festival <span class="chev">▾</span></button>
+<div class="add-section" id="addSection">
+  <h2>➕ Añadir festival</h2>
+  <p class="hint">Se guarda en la nube (Supabase). Todos los usuarios ven los mismos datos.</p>
+  <div class="add-grid">
+    <div><label>Nombre*</label><input id="inNombre" placeholder="Nombre"></div>
+    <div>
+      <label>CCAA / país*</label>
+      <input id="inCCAA" list="listaCCAA" placeholder="Ej: Andalucía, o escribe otra cosa">
+    </div>
+    <datalist id="listaCCAA"></datalist>
+    <div><label>Localidad</label>
+      <div class="web-input-wrapper">
+        <input id="inLocalidad" placeholder="Ej: Deleitosa (Cáceres)">
+        <button class="btn-open-web" id="btnOpenMapa" disabled title="Abrir en Google Maps en una nueva pestaña">📍 Mapa</button>
+      </div>
+    </div>
+    <div><label>Estilo</label><input id="inEstilo" placeholder="Ej: Rock"></div>
+    <div><label>Fecha inicio*</label><input type="date" id="inInicio"></div>
+    <div><label>Fecha fin</label><input type="date" id="inFin"></div>
+    <div><label>Coordenadas*</label><input id="inCoords" placeholder="Ej: 39.53,-5.55"></div>
+    <div><label>Precio entrada</label><select id="inPrecio"><option value="gratis">Gratis</option><option value="pago">De pago</option><option value="pago_solidario">Pago solidario</option><option value="desconocido">Sin confirmar</option></select></div>
+    <div id="inCantidadWrap" style="display:none"><label>Cantidad (€)</label><input type="number" id="inCantidad" min="0" step="0.01" placeholder="Ej: 12"></div>
+    <div><label>Acampada</label><select id="inAcampada"><option value="gratis">Gratuita</option><option value="pago">De pago</option><option value="no">Sin acampada</option><option value="desconocido">Sin confirmar</option></select></div>
+    <div style="grid-column:1/-1">
+      <label>Web</label>
+      <div class="web-input-wrapper">
+        <input id="inWeb" placeholder="https://...">
+        <button class="btn-open-web" id="btnOpenWeb" disabled title="Abrir la URL en una nueva pestaña">🌐 Abrir</button>
+      </div>
+    </div>
+    <div style="grid-column:1/-1">
+      <label>URL del cartel (imagen)</label>
+      <input id="inCartel" placeholder="https://...">
+    </div>
+  </div>
+  <div class="add-actions">
+    <button class="primary-btn" id="btnAdd">Añadir</button>
+    <span class="form-msg" id="formMsg"></span>
+  </div>
+</div>
+
+<!-- ===== MODAL DEL ASISTENTE IA (con botón "+" en misma línea) ===== -->
+<div class="modal-overlay assistant-modal" id="assistantModal">
+  <div class="modal-box">
+    <button class="modal-close" id="assistantClose">✕</button>
+    <h3>🤖 Asistente IA: buscar festival</h3>
+    <p style="margin-bottom:1rem;color:#6e7f76;font-size:0.9rem;">Introduce el nombre del festival o sube un cartel. El asistente analizará la imagen y buscará en internet para rellenar el formulario.</p>
+    
+    <!-- Campo de texto con botón "+" en la misma línea -->
+    <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+      <input type="text" id="assistantQuery" placeholder="Nombre o URL del festival (opcional si subes imagen)" style="flex:1; padding:0.6rem 0.8rem; border-radius:8px; border:1px solid #d9d0c4; font-size:0.9rem; background:#fff; color:#1e2b25; transition:background 0.3s,border-color 0.3s,color 0.3s;">
+      <button class="icon-btn" id="assistantAttachBtn" title="Subir cartel" style="flex-shrink:0; width:36px; height:36px; border-radius:50%; border:1px dashed rgba(255,179,71,0.4); background:transparent; color:#c47b4a; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.2s,transform 0.15s;">+</button>
+      <input type="file" id="assistantFileInput" accept="image/*" multiple hidden>
+    </div>
+    
+    <!-- Área de miniaturas -->
+    <div class="thumbs" id="assistantThumbs" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;"></div>
+    
+    <div class="assistant-status" id="assistantStatus"></div>
+    
+    <div class="assistant-actions">
+      <button class="btn-analyze" id="btnAnalyze">🔍 Buscar y extraer datos</button>
+      <button class="btn-fill-form" id="btnFillForm" disabled>📝 Rellenar formulario</button>
+    </div>
+    
+    <div id="assistantResult" style="display:none;">
+      <h4 style="margin-top:1rem;font-size:1rem;">📋 Datos extraídos:</h4>
+      <div class="result-preview" id="assistantPreview"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="reproductorModalOverlay">
+  <div class="modal-box" id="reproductorModalBox" style="max-width:360px">
+
+    <div class="fp-player">
+      <div class="fp-titlebar" id="fpTitlebar">
+        <span class="fp-title-drag">♫ FESTIPLAYER 2000</span>
+        <span class="fp-title-btns">
+          <button type="button" id="fpBtnCollapse" class="fp-title-btn" title="Colapsar / expandir">▁</button>
+          <button type="button" id="fpBtnClose" class="fp-title-btn" title="Cerrar">✕</button>
+        </span>
+      </div>
+
+      <div class="fp-screen">
+        <div class="fp-video-frame">
+          <div class="fp-placeholder" id="fpPlaceholder">selecciona una canción del cartel</div>
+          <iframe id="fpYtFrame" src="" allow="autoplay; encrypted-media" style="display:none;"></iframe>
+          <div class="fp-scan"></div>
+          <div class="fp-caption">
+            <div class="fp-track-name" id="fpTrackName">—</div>
+            <div class="fp-track-artist" id="fpTrackArtist">—</div>
+          </div>
+        </div>
+        <div class="fp-status-row">
+          <span id="fpStatusText">LISTO</span>
+          <div class="fp-eq fp-paused" id="fpEq">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fp-controls">
+        <button class="fp-btn" id="fpPrevBtn" title="Anterior">|◀◀</button>
+        <button class="fp-btn fp-play" id="fpPlayBtn" title="Play/Pausa">▶</button>
+        <button class="fp-btn" id="fpNextBtn" title="Siguiente">▶▶|</button>
+      </div>
+
+      <div class="fp-seek-row">
+        <span id="fpTimeCurrent">0:00</span>
+        <input type="range" id="fpSeekSlider" min="0" max="100" value="0" step="0.1">
+        <span id="fpTimeDuration">0:00</span>
+      </div>
+
+      <div class="fp-playlist" id="fpPlaylist"></div>
+
+      <div class="fp-hint" id="fpHint"></div>
+      <div class="fp-footer-note">reproducción vía YouTube · toca un artista, luego una canción</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="supabaseModalOverlay">
+  <div class="modal-box" id="supabaseModalBox" style="max-width:480px">
+    <button class="modal-close" id="supabaseModalCerrar">✕</button>
+    <h3>🗄️ Configurar Supabase</h3>
+    <p style="font-size:0.85rem;color:#6e7f76;margin-top:0.3rem">
+      De aquí sale toda la lista de festivales — es la base de datos que usa la app. Ya viene rellenada con la que usáis ahora; solo tendrías que cambiarla si algún día migras a otro proyecto de Supabase. Se guarda en este dispositivo.
+    </p>
+    <div style="margin-top:0.9rem">
+      <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem">URL del proyecto</label>
+      <input type="text" id="inputSupabaseUrl" placeholder="https://xxxx.supabase.co" autocomplete="off" style="width:100%;padding:0.55rem 0.75rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.85rem;box-sizing:border-box">
+    </div>
+    <div style="margin-top:0.7rem">
+      <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem">Clave (anon key)</label>
+      <input type="password" id="inputSupabaseKey" placeholder="eyJhbGciOi..." autocomplete="off" style="width:100%;padding:0.55rem 0.75rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.85rem;box-sizing:border-box">
+    </div>
+    <div style="display:flex;gap:0.6rem;margin-top:0.8rem">
+      <button type="button" id="btnGuardarSupabaseConfig" class="btn-open-web" style="flex:1;justify-content:center">💾 Guardar</button>
+      <button type="button" id="btnRestaurarSupabaseConfig" class="btn-quitar-cartel" style="flex:0 0 auto;padding:0 1rem;width:auto">Restaurar</button>
+    </div>
+    <div id="supabaseConfigEstado" style="font-size:0.8rem;margin-top:0.5rem;min-height:1.1em"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="perplexityModalOverlay">
+  <div class="modal-box" id="perplexityModalBox" style="max-width:480px">
+    <button class="modal-close" id="perplexityModalCerrar">✕</button>
+    <h3>🔑 Configurar Perplexity</h3>
+    <p style="font-size:0.85rem;color:#6e7f76;margin-top:0.3rem">
+      El Asistente IA usa la API de Perplexity para buscar información de festivales. Necesitas tu propia clave: se guarda solo en este dispositivo, nunca se envía a ningún sitio salvo directamente a Perplexity.
+    </p>
+
+    <button type="button" class="perplexity-seccion-toggle" data-seccion="seccionClave"><span>🔑 Tu clave</span><span class="chev">▶</span></button>
+    <div class="perplexity-seccion" id="seccionClave" style="display:none">
+      <div style="margin-top:0.7rem">
+        <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem">Tu clave de Perplexity</label>
+        <input type="password" id="inputPerplexityKey" placeholder="pplx-..." autocomplete="off" style="width:100%;padding:0.55rem 0.75rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.85rem;box-sizing:border-box">
+      </div>
+      <div style="display:flex;gap:0.6rem;margin-top:0.8rem">
+        <button type="button" id="btnGuardarPerplexityKey" class="btn-open-web" style="flex:1;justify-content:center">💾 Guardar</button>
+        <button type="button" id="btnBorrarPerplexityKey" class="btn-quitar-cartel" style="flex:0 0 auto;padding:0 1rem;width:auto">Borrar</button>
+      </div>
+      <div id="perplexityKeyEstado" style="font-size:0.8rem;margin-top:0.5rem;min-height:1.1em"></div>
+    </div>
+
+    <button type="button" class="perplexity-seccion-toggle" data-seccion="seccionGuia"><span>📋 Cómo conseguir tu clave</span><span class="chev">▶</span></button>
+    <div class="perplexity-seccion" id="seccionGuia" style="display:none">
+      <ol style="font-size:0.82rem;line-height:1.7;padding-left:1.2rem;color:#3d5248;margin:0.7rem 0 0">
+        <li>Ve al portal de API: <a href="https://console.perplexity.ai" target="_blank" rel="noopener noreferrer">console.perplexity.ai</a>.</li>
+        <li>Regístrate — no hace falta introducir ningún método de pago, pulsa "Finalizar" o sáltatelo si te lo pide.</li>
+        <li>Ve a "Claves API" (API Keys) y pulsa "Crear nueva".</li>
+        <li>Copia la clave (empieza por <code>pplx-</code>) — solo se muestra una vez, así que guárdala bien.</li>
+        <li>Pégala arriba, en el campo de "Tu clave", y pulsa "Guardar".</li>
+      </ol>
+    </div>
+
+    <button type="button" class="perplexity-seccion-toggle" data-seccion="seccionPrompts"><span>⚙️ Prompts y ajustes avanzados</span><span class="chev">▶</span></button>
+    <div class="perplexity-seccion" id="seccionPrompts" style="display:none">
+      <p style="font-size:0.8rem;color:#6e7f76;margin:0.7rem 0">Opcional: personaliza el texto exacto que se le manda a la IA, y su temperatura/límite de respuesta, para el Asistente y para el Resumen.</p>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap">
+        <button type="button" class="btn-edit" id="btnEditarPromptAsistente">📝 Prompt del Asistente</button>
+        <button type="button" class="btn-edit" id="btnEditarPromptResumen">📝 Prompt del Resumen</button>
+      </div>
+      <button type="button" id="btnRestaurarConfigPerplexity" style="margin-top:0.8rem;background:none;border:none;color:#a33;font-size:0.8rem;cursor:pointer;text-decoration:underline;padding:0">🔄 Restaurar prompts y ajustes predeterminados</button>
+      <div id="restaurarPromptsEstado" style="font-size:0.8rem;margin-top:0.4rem;min-height:1.1em;color:#3d5248"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="youtubeModalOverlay">
+  <div class="modal-box" id="youtubeModalBox" style="max-width:480px">
+    <button class="modal-close" id="youtubeModalCerrar">✕</button>
+    <h3>🎬 Configurar YouTube</h3>
+    <p style="font-size:0.85rem;color:#6e7f76;margin-top:0.3rem">
+      Se usa para encontrar las canciones de los artistas del cartel en el reproductor. Ya viene rellenada con una clave por defecto; solo tendrías que cambiarla si algún día se agota la cuota o migras a otro proyecto de Google Cloud. Se guarda en este dispositivo.
+    </p>
+    <div style="margin-top:0.9rem">
+      <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem">Clave de la API de YouTube Data</label>
+      <input type="password" id="inputYoutubeKey" placeholder="AIza..." autocomplete="off" style="width:100%;padding:0.55rem 0.75rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.85rem;box-sizing:border-box">
+    </div>
+    <div style="display:flex;gap:0.6rem;margin-top:0.8rem">
+      <button type="button" id="btnGuardarYoutubeKey" class="btn-open-web" style="flex:1;justify-content:center">💾 Guardar</button>
+      <button type="button" id="btnRestaurarYoutubeKey" class="btn-quitar-cartel" style="flex:0 0 auto;padding:0 1rem;width:auto">Restaurar</button>
+    </div>
+    <div id="youtubeConfigEstado" style="font-size:0.8rem;margin-top:0.5rem;min-height:1.1em"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="promptModalOverlay">
+  <div class="modal-box" id="promptModalBox" style="max-width:560px">
+    <button class="modal-close" id="promptModalCerrar">✕</button>
+    <h3 id="promptModalTitulo">📝 Editar prompt</h3>
+    <p style="font-size:0.8rem;color:#6e7f76;margin-top:0.3rem" id="promptModalAyuda"></p>
+    <div style="margin-top:0.7rem">
+      <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem">Texto del prompt</label>
+      <textarea id="promptModalTexto" rows="12" style="width:100%;padding:0.6rem 0.7rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.8rem;font-family:monospace;box-sizing:border-box;resize:vertical"></textarea>
+    </div>
+    <div style="display:flex;gap:0.8rem;margin-top:0.7rem;flex-wrap:wrap">
+      <div style="flex:1;min-width:140px">
+        <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem">Temperatura (0.0 – 1.0)</label>
+        <input type="number" id="promptModalTemp" min="0" max="1" step="0.1" style="width:100%;padding:0.5rem 0.7rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.85rem;box-sizing:border-box">
+      </div>
+      <div style="flex:1;min-width:140px">
+        <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:0.3rem">Max tokens (50 – 2000)</label>
+        <input type="number" id="promptModalTokens" min="50" max="2000" step="50" style="width:100%;padding:0.5rem 0.7rem;border-radius:8px;border:1px solid #d9d0c4;font-size:0.85rem;box-sizing:border-box">
+      </div>
+    </div>
+    <div style="display:flex;gap:0.6rem;margin-top:0.9rem;flex-wrap:wrap">
+      <button type="button" id="btnGuardarPrompt" class="btn-open-web" style="flex:1;justify-content:center">💾 Guardar</button>
+      <button type="button" id="btnRestaurarPrompt" class="btn-quitar-cartel" style="flex:0 0 auto;padding:0 1rem;width:auto">Restaurar este</button>
+    </div>
+    <div id="promptModalMensaje" style="font-size:0.8rem;margin-top:0.5rem;min-height:1.1em"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<button id="btnScrollTop" class="fab-scroll-top" title="Subir arriba" aria-label="Subir arriba">↑</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ============================================================
+// CONFIGURACIÓN DE SUPABASE
+// ============================================================
+const SUPABASE_URL_DEFECTO = "https://zdkrksduvpfaitmcjetl.supabase.co";
+const SUPABASE_KEY_DEFECTO = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpka3Jrc2R1dnBmYWl0bWNqZXRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUwNjQ3MzUsImV4cCI6MjEwMDY0MDczNX0.0LZpq3QgLiK6le1tbTI-Kmvj_SuHkGfAZkgGHOaM0JU";
+const SUPABASE_URL_STORAGE = "festGratisSupabaseUrl";
+const SUPABASE_KEY_STORAGE = "festGratisSupabaseKey";
+function getSupabaseUrl(){ return localStorage.getItem(SUPABASE_URL_STORAGE) || SUPABASE_URL_DEFECTO; }
+function getSupabaseKey(){ return localStorage.getItem(SUPABASE_KEY_STORAGE) || SUPABASE_KEY_DEFECTO; }
+function saveSupabaseConfig(url, key){
+  localStorage.setItem(SUPABASE_URL_STORAGE, url);
+  localStorage.setItem(SUPABASE_KEY_STORAGE, key);
+}
+function restaurarSupabaseConfigDefecto(){
+  localStorage.removeItem(SUPABASE_URL_STORAGE);
+  localStorage.removeItem(SUPABASE_KEY_STORAGE);
+}
+
+// ============================================================
+// CONFIGURACIÓN DE YOUTUBE (Data API) — precargada, con opción a cambiarla
+// ============================================================
+const YOUTUBE_KEY_DEFECTO = "AIzaSyCPjS1PwQhr2ijIpoWwmxIxEHITuwvoF5Q";
+const YOUTUBE_KEY_STORAGE = "festGratisYoutubeKey";
+function getYoutubeKey(){ return localStorage.getItem(YOUTUBE_KEY_STORAGE) || YOUTUBE_KEY_DEFECTO; }
+function saveYoutubeKey(k){ localStorage.setItem(YOUTUBE_KEY_STORAGE, k); }
+function restaurarYoutubeKeyDefecto(){ localStorage.removeItem(YOUTUBE_KEY_STORAGE); }
+
+// ============================================================
+// CONFIGURACIÓN DE PERPLEXITY
+// ============================================================
+const PERPLEXITY_URL = "https://api.perplexity.ai/chat/completions";
+const PERPLEXITY_KEY_STORAGE = "festGratisPerplexityKey";
+function getPerplexityKey(){ return localStorage.getItem(PERPLEXITY_KEY_STORAGE) || ''; }
+function savePerplexityKey(k){ localStorage.setItem(PERPLEXITY_KEY_STORAGE, k); }
+function borrarPerplexityKey(){ localStorage.removeItem(PERPLEXITY_KEY_STORAGE); }
+
+// ============================================================
+// PROMPTS Y AJUSTES DEL ASISTENTE/RESUMEN (editables, con valores por defecto)
+// ============================================================
+const PROMPT_ASISTENTE_KEY = "festGratisPromptAsistente";
+const PROMPT_RESUMEN_KEY = "festGratisPromptResumen";
+
+const PROMPT_ASISTENTE_DEFECTO = `Eres un asistente experto en extraer información de festivales. {textoBase}
+
+Debes devolver un objeto JSON con los siguientes campos:
+
+{
+  "nombre": "Nombre del festival",
+  "ccaa": "Comunidad autónoma (ej: Extremadura, Andalucía, Madrid)",
+  "localidad": "Localidad y provincia (ej: Deleitosa (Cáceres))",
+  "estilo": "Estilo musical (ej: Rock, Punk, Reggae)",
+  "inicio": "Fecha de inicio en formato YYYY-MM-DD",
+  "fin": "Fecha de fin en formato YYYY-MM-DD (si es de un solo día, igual que inicio)",
+  "precio": "gratis, pago, pago_solidario (si la entrada es de pago pero con fin benéfico/solidario) o desconocido",
+  "precio_cantidad": "precio numérico de la entrada en euros si se menciona una cantidad concreta (solo número, ej: 12 o 12.5), o null si es gratis, desconocido o no se especifica cantidad",
+  "acampada": "gratis, pago, no o desconocido",
+  "web": "URL de la página web del festival",
+  "cartel": "URL del cartel (si encuentras una imagen, ponla; si no, null)",
+  "lat": "latitud aproximada (número decimal)",
+  "lng": "longitud aproximada (número decimal)"
+}
+
+IMPORTANTE:
+- Si no encuentras algún dato, pon "desconocido" o null según corresponda.
+- Para las coordenadas (lat/lng), intenta obtenerlas del lugar donde se celebra el festival.
+- Responde SOLO con el JSON, sin texto adicional.`;
+
+const PROMPT_RESUMEN_DEFECTO = `Dame un breve resumen descriptivo del festival "{nombre}" que se celebra en {ubicacion}.
+
+SOLO INCLUYE INFORMACIÓN EXPLÍCITAMENTE CONFIRMADA:
+- Historia y trayectoria (solo si está documentada)
+- Estilo musical (solo si está confirmado)
+- Ambiente y características (solo aspectos contrastados)
+- Precio: SOLO si aparece la cantidad exacta en euros en la web oficial
+- Acampada: SOLO si la web oficial confirma si hay o no
+
+NO MENCIONES NUNCA:
+- Precios aproximados, ni "sobre", ni "alrededor de"
+- La acampada si no está confirmada explícitamente
+- Datos de años anteriores como si fueran actuales
+- Opiniones personales o generalizaciones
+- Fuentes de información ("según", "web oficial", "la organización")
+- Lenguaje de probabilidad o duda
+
+Responde en español, en un párrafo de hasta 300 palabras.
+NO uses formato Markdown (ni asteriscos, ni negritas, ni cursivas).
+NO incluyas referencias con números entre corchetes.
+Solo texto plano. Si hay poca información, sé breve y conciso.`;
+
+function getPerplexityConfig(){
+  let asistente = { prompt: PROMPT_ASISTENTE_DEFECTO, temperature: 0.3, maxTokens: 2000 };
+  let resumen = { prompt: PROMPT_RESUMEN_DEFECTO, temperature: 0.2, maxTokens: 350 };
+  try {
+    const guardadoAsistente = localStorage.getItem(PROMPT_ASISTENTE_KEY);
+    if (guardadoAsistente) asistente = { ...asistente, ...JSON.parse(guardadoAsistente) };
+  } catch(e) { /* si el JSON guardado está corrupto, seguimos con los valores por defecto */ }
+  try {
+    const guardadoResumen = localStorage.getItem(PROMPT_RESUMEN_KEY);
+    if (guardadoResumen) resumen = { ...resumen, ...JSON.parse(guardadoResumen) };
+  } catch(e) { /* idem */ }
+  return { key: getPerplexityKey(), asistente, resumen };
+}
+const MODEL = "sonar";
+
+// ============================================================
+// CLIENTE SUPABASE
+// ============================================================
+const supabase = {
+  async request(endpoint, options = {}) {
+    const url = `${getSupabaseUrl()}/rest/v1/${endpoint}`;
+    const headers = {
+      'apikey': getSupabaseKey(),
+      'Authorization': `Bearer ${getSupabaseKey()}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    };
+    const config = { method: options.method || 'GET', headers };
+    if (options.body) config.body = JSON.stringify(options.body);
+    
+    const response = await fetch(url, config);
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Error ${response.status}: ${error}`);
+    }
+    return response.json();
+  },
+  
+  async getAll() {
+    return this.request('festivales?select=*');
+  },
+  
+  async insert(festival) {
+    return this.request('festivales', { method: 'POST', body: festival });
+  },
+  
+  async update(id, data) {
+    return this.request(`festivales?id=eq.${id}`, { method: 'PATCH', body: data });
+  },
+  
+  async delete(id) {
+    return this.request(`festivales?id=eq.${id}`, { method: 'DELETE' });
+  }
+};
+
+// ============================================================
+// LISTA DE CCAA
+// ============================================================
+const CCAA_LIST = [
+  "Andalucía", "Aragón", "Asturias", "Islas Baleares", "Canarias",
+  "Cantabria", "Castilla-La Mancha", "Castilla y León", "Cataluña",
+  "Comunidad Valenciana", "Extremadura", "Galicia", "Madrid",
+  "Murcia", "Navarra", "País Vasco", "La Rioja", "Ceuta", "Melilla"
+];
+
+// ============================================================
+// ESTADO Y FUNCIONES PRINCIPALES
+// ============================================================
+let festivales = [];
+let festivalesFiltrados = [];
+const THEME_KEY = "festGratisTheme";
+
+function loadTheme(){ return localStorage.getItem(THEME_KEY) === 'dark'; }
+
+const VIEW_KEY = "festGratisVista";
+function loadVista(){ return localStorage.getItem(VIEW_KEY) || 'tarjetas'; }
+function saveVista(v){ localStorage.setItem(VIEW_KEY, v); }
+let vistaActual = loadVista();
+let ordenActual = 'fecha';
+let filtroCCAAActual = '';
+let filtroEstiloActual = '';
+let filtroMesActual = '';
+let filtroPrecioActual = '';
+let filtroAcampadaActual = '';
+
+function parseDate(s){ if(!s) return new Date(0); const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function estado(f){
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  const ini=parseDate(f.inicio), fin=parseDate(f.fin);
+  if (hoy < ini) return 'proximo';
+  if (hoy > fin) return 'pasado';
+  return 'curso';
+}
+function fmtFecha(s){ const d=parseDate(s); return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'}); }
+function getEnlace(f){
+  const q=encodeURIComponent((f.nombre||'')+' '+(f.localidad||'')+' festival');
+  return `https://www.google.com/search?q=${q}`;
+}
+function etiquetaPrecio(p){ return {gratis:'🎟️ Gratis', pago:'🎟️ De pago', pago_solidario:'🎗️ Pago solidario', desconocido:'🎟️ Sin confirmar'}[p] || p; }
+function etiquetaPrecioConCantidad(f){
+  const base = etiquetaPrecio(f.precio);
+  const cant = f.precio_cantidad;
+  if ((f.precio==='pago'||f.precio==='pago_solidario') && cant!==undefined && cant!==null && cant!=='' && !isNaN(cant)) {
+    return `${base} (${Number(cant).toLocaleString('es-ES')}€)`;
+  }
+  return base;
+}
+function etiquetaAcampada(a){ return {gratis:'⛺ Gratis', pago:'⛺ De pago', no:'⛺ Sin acampada', desconocido:'⛺ Sin confirmar'}[a] || a; }
+
+// ============================================================
+// COORDENADAS: parseo de un único campo "lat,lng"
+// ============================================================
+function parseCoords(str){
+  if(!str) return null;
+  const partes = String(str).split(',').map(s=>s.trim());
+  if(partes.length!==2) return null;
+  const lat = parseFloat(partes[0]);
+  const lng = parseFloat(partes[1]);
+  if(isNaN(lat) || isNaN(lng)) return null;
+  return { lat, lng };
+}
+
+// ============================================================
+// SEGURIDAD: escape de HTML y saneado de URLs
+// ============================================================
+function escapeHtml(str){
+  if (str===null || str===undefined) return '';
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[c]));
+}
+function safeUrl(u){
+  if (!u) return '';
+  try {
+    const url = new URL(String(u), window.location.href);
+    if (url.protocol === 'http:' || url.protocol === 'https:') return url.href;
+  } catch(e) { /* URL inválida */ }
+  return '';
+}
+
+// ============================================================
+// MANEJO DE IMÁGENES (reutilizable)
+// ============================================================
+function fileToDataUrl(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderThumb(parent, dataUrl, index, onRemove){
+  const wrap = document.createElement('div');
+  wrap.className = 'thumb';
+  wrap.innerHTML = `<img src="${dataUrl}"><button data-i="${index}">×</button>`;
+  wrap.querySelector('button').addEventListener('click', (ev) => {
+    const i = Number(ev.target.dataset.i);
+    onRemove(i);
+    wrap.remove();
+  });
+  parent.appendChild(wrap);
+}
+
+// ============================================================
+// MAPA
+// ============================================================
+const map = L.map('map', { scrollWheelZoom:true }).setView([40.4, -3.7], 5);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap' }).addTo(map);
+let markers = {};
+let marcadoresTemporales = new Set();
+
+function iconoColor(color, tipoPrecio){
+  let simbolo = '';
+  if (tipoPrecio === 'pago') {
+    simbolo = `<text x="12" y="15.8" text-anchor="middle" font-size="8" font-weight="bold" font-family="Arial, sans-serif" fill="#fff08a" stroke="#152C27" stroke-width="0.5" paint-order="stroke">$</text>`;
+  } else if (tipoPrecio === 'pago_solidario') {
+    simbolo = `<path d="M12 10 L8.5 8 L10.5 11 Z" fill="#ffc2e0" stroke="#152C27" stroke-width="0.4"/><path d="M12 10 L15.5 8 L13.5 11 Z" fill="#ffc2e0" stroke="#152C27" stroke-width="0.4"/><circle cx="12" cy="10" r="1.3" fill="#ffc2e0" stroke="#152C27" stroke-width="0.4"/><path d="M12.8 10.8 L9 19 L10.8 19 L13.5 12 Z" fill="#ffc2e0" stroke="#152C27" stroke-width="0.4"/><path d="M11.2 10.8 L15 19 L13.2 19 L10.5 12 Z" fill="#ffc2e0" stroke="#152C27" stroke-width="0.4"/>`;
+  }
+  return L.divIcon({
+    className: 'marker-icon', 
+    html: `<div style="width:20px;height:20px;"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2 L22 20 L2 20 Z" fill="${color}" stroke="#152C27" stroke-width="1"/><path d="M12 2 L16 20 L8 20 Z" fill="rgba(255,255,255,0.25)"/>${simbolo}</svg></div>`,
+    iconSize:[20,20], iconAnchor:[10,18], popupAnchor:[0,-16]
+  });
+}
+
+function crearMarcador(f){
+  const col = estado(f)==='proximo'?'#3a9b6e':estado(f)==='curso'?'#e0a93a':'#b23a2e';
+  const mk = L.marker([f.lat, f.lng], { icon: iconoColor(col, f.precio) }).addTo(map);
+  const etq = estado(f)==='proximo'?'Por celebrarse':estado(f)==='curso'?'En curso':'Ya pasado';
+  const cartelSano = safeUrl(f.cartel);
+  mk.bindPopup(`
+    <b>${escapeHtml(f.nombre)}</b><br>${escapeHtml(f.localidad)}<br>${fmtFecha(f.inicio)}${f.inicio!==f.fin?' – '+fmtFecha(f.fin):''}<br>
+    <span style="background:${col};color:#fff;padding:0.1rem 0.4rem;border-radius:4px;font-size:0.7rem;">${etq}</span><br>
+    ${cartelSano ? `<img src="${escapeHtml(cartelSano)}" style="max-width:180px;max-height:80px;border-radius:6px;margin:4px 0;" onerror="this.style.display='none'">` : ''}
+    <a href="#" onclick="event.preventDefault(); abrirModalDesdeMapa('${escapeHtml(f.id)}'); return false;">📋 Ver ficha</a> ·
+    <a href="${escapeHtml(getEnlace(f))}" target="_blank">🔎 Info</a>
+  `);
+  return mk;
+}
+
+// Navega manualmente el carrusel de carteles del modal abierto (no avanza solo)
+function moverCarrusel(delta){
+  const cont = document.getElementById('carouselCartel');
+  if (!cont) return;
+  const slides = cont.querySelectorAll('.carousel-slide');
+  if (!slides.length) return;
+  let idx = parseInt(cont.dataset.index, 10) || 0;
+  idx = (idx + delta + slides.length) % slides.length;
+  cont.dataset.index = idx;
+  slides.forEach((s,i)=> s.style.display = (i===idx ? 'block':'none'));
+  const contador = cont.querySelector('.carousel-contador');
+  if (contador) contador.textContent = (idx+1) + ' / ' + slides.length;
+}
+
+// Abre la ficha completa de un festival desde el popup de un marcador del mapa
+function abrirModalDesdeMapa(id){
+  const f = festivales.find(x => String(x.id) === String(id));
+  if (f) abrirModal(f);
+}
+
+function actualizarMapa(lista){
+  Object.values(markers).forEach(m=>map.removeLayer(m));
+  markers = {};
+  marcadoresTemporales.clear();
+  lista.forEach(f=>{
+    markers[f.id] = crearMarcador(f);
+  });
+}
+
+function filtrarPorMapa(lista) {
+  const bounds = map.getBounds();
+  return lista.filter(f => {
+    if (!f.lat || !f.lng) return false;
+    return bounds.contains([f.lat, f.lng]);
+  });
+}
+
+// ============================================================
+// PESTAÑAS MAPA / CALENDARIO
+// ============================================================
+let pestañaActiva = 'mapa';
+
+function filtrarPorCalendario(lista){
+  return lista.filter(f=>{
+    const ini = parseDate(f.inicio);
+    const fin = parseDate(f.fin || f.inicio);
+    if (calSeleccion.tipo === 'dia'){
+      return ini <= calSeleccion.fecha && fin >= calSeleccion.fecha;
+    } else if (calSeleccion.tipo === 'semana'){
+      return fin >= calSeleccion.inicio && ini <= calSeleccion.fin;
+    } else {
+      const inicioMes = new Date(calSeleccion.anio, calSeleccion.mes, 1);
+      const finMes = new Date(calSeleccion.anio, calSeleccion.mes+1, 0);
+      return fin >= inicioMes && ini <= finMes;
+    }
+  });
+}
+
+function actualizarTarjetas() {
+  const visible = pestañaActiva === 'calendario'
+    ? filtrarPorCalendario(festivalesFiltrados)
+    : filtrarPorMapa(festivalesFiltrados);
+  renderizarTarjetas(visible);
+}
+
+map.on('moveend', function() {
+  actualizarTarjetas();
+});
+
+// ============================================================
+// CALENDARIO
+// ============================================================
+const hoyCal = new Date(); hoyCal.setHours(0,0,0,0);
+let calMes = hoyCal.getMonth();
+let calAnio = hoyCal.getFullYear();
+let calSeleccion = { tipo:'mes', anio: calAnio, mes: calMes };
+const MAX_LANES_CAL = 4;
+const MESES_NOMBRE_CAL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+function mismaFechaCal(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+function diffDiasCal(a,b){ return Math.round((b-a)/86400000); }
+function fmtISOCal(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+function diaEstaSeleccionadoCal(dia){
+  if (calSeleccion.tipo==='dia') return mismaFechaCal(dia, calSeleccion.fecha);
+  if (calSeleccion.tipo==='semana') return dia >= calSeleccion.inicio && dia <= calSeleccion.fin;
+  return dia.getMonth()===calSeleccion.mes && dia.getFullYear()===calSeleccion.anio;
+}
+
+function renderizarCalendario(){
+  const tituloEl = document.getElementById('calTituloMes');
+  if (!tituloEl) return;
+  tituloEl.textContent = MESES_NOMBRE_CAL[calMes] + ' ' + calAnio;
+  tituloEl.classList.toggle('cal-mes-sel', calSeleccion.tipo==='mes' && calSeleccion.mes===calMes && calSeleccion.anio===calAnio);
+
+  const primerDiaMes = new Date(calAnio, calMes, 1);
+  const ultimoDiaMes = new Date(calAnio, calMes+1, 0);
+  let inicioGrid = new Date(primerDiaMes);
+  inicioGrid.setDate(inicioGrid.getDate() - ((inicioGrid.getDay()+6)%7));
+  let finGrid = new Date(ultimoDiaMes);
+  finGrid.setDate(finGrid.getDate() + (6-((finGrid.getDay()+6)%7)));
+
+  const semanas = [];
+  let cursor = new Date(inicioGrid);
+  while (cursor <= finGrid){
+    const semana = [];
+    for (let i=0;i<7;i++){ semana.push(new Date(cursor)); cursor.setDate(cursor.getDate()+1); }
+    semanas.push(semana);
+  }
+
+  const listaBase = festivalesFiltrados || [];
+  let html = '';
+  semanas.forEach(semana=>{
+    const rowStart = semana[0], rowEnd = semana[6];
+    const eventosSemana = listaBase.filter(f=>{
+      const ini = parseDate(f.inicio), fin = parseDate(f.fin||f.inicio);
+      return fin >= rowStart && ini <= rowEnd;
+    }).sort((a,b)=> parseDate(a.inicio) - parseDate(b.inicio));
+
+    const lanesFin = [];
+    const asignaciones = [];
+    eventosSemana.forEach(f=>{
+      const ini = parseDate(f.inicio), fin = parseDate(f.fin||f.inicio);
+      const colInicio = Math.max(0, diffDiasCal(rowStart, ini));
+      const colFin = Math.min(6, diffDiasCal(rowStart, fin));
+      let lane = lanesFin.findIndex(finLane => finLane < colInicio);
+      if (lane === -1){ lane = lanesFin.length; lanesFin.push(colFin); }
+      else { lanesFin[lane] = colFin; }
+      asignaciones.push({f, lane, colInicio, colFin});
+    });
+
+    const semanaSel = calSeleccion.tipo==='semana' && mismaFechaCal(calSeleccion.inicio, rowStart);
+    const alturaEventos = Math.max(1, Math.min(lanesFin.length, MAX_LANES_CAL)) * 8 + (lanesFin.length > MAX_LANES_CAL ? 9 : 0);
+
+    html += `<div class="cal-semana">
+      <div class="cal-semana-selector ${semanaSel?'cal-dia-sel':''}" data-inicio="${fmtISOCal(rowStart)}" data-fin="${fmtISOCal(rowEnd)}" title="Seleccionar semana"></div>
+      <div class="cal-dias-wrap">
+        <div class="cal-dias-grid">`;
+    semana.forEach(dia=>{
+      const esMesActual = dia.getMonth()===calMes;
+      const esHoy = mismaFechaCal(dia, hoyCal);
+      const sel = diaEstaSeleccionadoCal(dia);
+      html += `<div class="cal-dia ${esMesActual?'':'cal-dia-otromes'} ${esHoy?'cal-dia-hoy':''} ${sel?'cal-dia-sel':''}" data-fecha="${fmtISOCal(dia)}">
+        <span class="cal-dia-num">${dia.getDate()}</span>
+        <div class="cal-dia-eventos" style="height:${alturaEventos}px"></div>
+      </div>`;
+    });
+    html += `</div>`;
+
+    html += `<div class="cal-overlay">`;
+    asignaciones.forEach(({f,lane,colInicio,colFin})=>{
+      if (lane >= MAX_LANES_CAL) return;
+      const color = colorPerfilAleatorio(f.id);
+      const top = lane*8;
+      const inset = 0.35; // pequeño margen para separar barras de días contiguos
+      const left = (colInicio*(100/7)) + inset;
+      const width = ((colFin-colInicio+1)*(100/7)) - (inset*2);
+      html += `<div class="cal-barra" style="left:${left}%;width:${width}%;top:${top}px;background:${color}" title="${escapeHtml(f.nombre)}"></div>`;
+    });
+    // Indicador "+N" para los días donde algún evento se quedó sin carril visible
+    for (let colIdx=0; colIdx<7; colIdx++){
+      const totalEseDia = asignaciones.filter(a => a.colInicio<=colIdx && a.colFin>=colIdx).length;
+      const visibleEseDia = asignaciones.filter(a => a.colInicio<=colIdx && a.colFin>=colIdx && a.lane<MAX_LANES_CAL).length;
+      const overflow = totalEseDia - visibleEseDia;
+      if (overflow > 0){
+        const left = colIdx*(100/7);
+        html += `<div class="cal-mas" style="left:${left}%;top:${MAX_LANES_CAL*8}px">+${overflow}</div>`;
+      }
+    }
+    html += `</div></div></div>`;
+  });
+
+  document.getElementById('calGrid').innerHTML = html;
+
+  document.querySelectorAll('.cal-dia').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const [y,m,d] = el.dataset.fecha.split('-').map(Number);
+      calSeleccion = { tipo:'dia', fecha: new Date(y,m-1,d) };
+      renderizarCalendario();
+      actualizarTarjetas();
+    });
+  });
+  document.querySelectorAll('.cal-semana-selector').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const [y1,m1,d1] = el.dataset.inicio.split('-').map(Number);
+      const [y2,m2,d2] = el.dataset.fin.split('-').map(Number);
+      calSeleccion = { tipo:'semana', inicio: new Date(y1,m1-1,d1), fin: new Date(y2,m2-1,d2) };
+      renderizarCalendario();
+      actualizarTarjetas();
+    });
+  });
+}
+
+document.getElementById('calTituloMes').addEventListener('click', ()=>{
+  calSeleccion = { tipo:'mes', anio: calAnio, mes: calMes };
+  renderizarCalendario();
+  actualizarTarjetas();
+});
+document.getElementById('calMesAnterior').addEventListener('click', ()=>{
+  calMes--; if (calMes<0){ calMes=11; calAnio--; }
+  calSeleccion = { tipo:'mes', anio: calAnio, mes: calMes };
+  renderizarCalendario();
+  actualizarTarjetas();
+});
+document.getElementById('calMesSiguiente').addEventListener('click', ()=>{
+  calMes++; if (calMes>11){ calMes=0; calAnio++; }
+  calSeleccion = { tipo:'mes', anio: calAnio, mes: calMes };
+  renderizarCalendario();
+  actualizarTarjetas();
+});
+
+document.getElementById('tabMapa').addEventListener('click', ()=>{
+  if (pestañaActiva==='mapa') return;
+  pestañaActiva = 'mapa';
+  document.getElementById('tabMapa').classList.add('activa');
+  document.getElementById('tabCalendario').classList.remove('activa');
+  document.getElementById('panelMapa').style.display = '';
+  document.getElementById('panelCalendario').style.display = 'none';
+  setTimeout(()=>map.invalidateSize(), 50);
+  actualizarTarjetas();
+});
+document.getElementById('tabCalendario').addEventListener('click', ()=>{
+  if (pestañaActiva==='calendario') return;
+  pestañaActiva = 'calendario';
+  document.getElementById('tabCalendario').classList.add('activa');
+  document.getElementById('tabMapa').classList.remove('activa');
+  document.getElementById('panelMapa').style.display = 'none';
+  document.getElementById('panelCalendario').style.display = '';
+  renderizarCalendario();
+  actualizarTarjetas();
+});
+
+// ============================================================
+// IR A UN FESTIVAL EN EL MAPA (desde la búsqueda global)
+// ============================================================
+function irAFestivalEnMapa(f){
+  let esTemporal = false;
+  if (!markers[f.id]) {
+    markers[f.id] = crearMarcador(f);
+    marcadoresTemporales.add(f.id);
+    esTemporal = true;
+  }
+  map.setView([f.lat, f.lng], 12);
+  setTimeout(()=>{ if (markers[f.id]) markers[f.id].openPopup(); }, 300);
+  abrirModal(f, esTemporal);
+}
+
+// ============================================================
+// MODAL PRINCIPAL (edición/visualización) con botón de resumen IA
+// ============================================================
+const modalOverlay = document.getElementById('modalOverlay');
+const modalBox = document.getElementById('modalBox');
+
+// ============================================================
+// COMPARTIR FICHA (genera un HTML autónomo y lo comparte/descarga)
+// ============================================================
+function generarFichaHTML(f, resumenTexto){
+  const est = estado(f);
+  const col = est==='proximo'?'#3a9b6e':est==='curso'?'#e0a93a':'#b23a2e';
+  const webSano = safeUrl(f.web);
+
+  const todosLosCarteles = [];
+  if (f.cartel) todosLosCarteles.push(safeUrl(f.cartel));
+  if (f.carteles && Array.isArray(f.carteles)) {
+    f.carteles.forEach(url => { const s = safeUrl(url); if (s) todosLosCarteles.push(s); });
+  }
+  const cartelesUnicos = [...new Set(todosLosCarteles)].filter(Boolean);
+
+  const busquedaMaps = [f.nombre, f.localidad, f.ccaa].filter(Boolean).join(' ');
+  const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(busquedaMaps)}`;
+
+  let iconosHtml = '';
+  if (webSano) iconosHtml += `<a href="${escapeHtml(webSano)}" target="_blank" class="icono" title="Web oficial">🌐</a>`;
+  iconosHtml += `<a href="${escapeHtml(getEnlace(f))}" target="_blank" class="icono" title="Buscar en Google">🔎</a>`;
+  iconosHtml += `<a href="${escapeHtml(mapsUrl)}" target="_blank" class="icono" title="Ver en Google Maps">📍</a>`;
+  if (f.precio && f.precio!=='desconocido') {
+    iconosHtml += `<span class="icono" title="${escapeHtml(etiquetaPrecioConCantidad(f))}" style="${f.precio==='gratis'?'text-decoration:line-through;':''}">💲</span>`;
+  }
+  if (f.acampada && f.acampada!=='desconocido') {
+    iconosHtml += `<span class="icono" title="${escapeHtml(etiquetaAcampada(f.acampada))}">🏕️</span>`;
+  }
+
+  let cartelesHtml = '';
+  cartelesUnicos.forEach(url=>{
+    cartelesHtml += `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="display:block;width:100%;"><img src="${escapeHtml(url)}" alt="Cartel del festival" style="width:100%;display:block;"></a>`;
+  });
+
+  const resumenHtml = resumenTexto
+    ? `<div class="resumen">${escapeHtml(resumenTexto)}</div>`
+    : '';
+
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(f.nombre)}</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Roboto,system-ui,sans-serif; background:#f7f4ec; color:#1e2b25; }
+.ficha { width:100%; background:#fff; }
+.header { background:${col}; padding:0.8rem 1.2rem; display:flex; justify-content:space-between; align-items:center; gap:0.5rem; flex-wrap:wrap; }
+.header .nombre { color:#fff; font-size:1.1rem; font-weight:700; word-break:break-word; flex:1; min-width:100px; }
+.header .iconos { display:flex; align-items:center; gap:0.3rem; flex-wrap:wrap; }
+.header .iconos .icono { color:#fff; text-decoration:none; font-size:1.25rem; line-height:1; display:inline-block; padding:0.1rem 0.2rem; }
+.sub { padding:0.6rem 1.2rem 0; font-size:0.85rem; color:#6e7f76; }
+.contenido a { display:block; width:100%; }
+.contenido img { width:100%; display:block; }
+.resumen { padding:0.8rem 1.2rem 1rem; border-top:1px solid #ede8e0; margin-top:0.6rem; font-size:0.95rem; line-height:1.6; white-space:pre-wrap; }
+.pie { padding:0.8rem 1.2rem 1.2rem; font-size:0.75rem; color:#9a9080; }
+</style>
+</head>
+<body>
+<div class="ficha">
+  <div class="header">
+    <span class="nombre">${escapeHtml(f.nombre)}</span>
+    <div class="iconos">${iconosHtml}</div>
+  </div>
+  <div class="sub">${escapeHtml(f.localidad)} · ${escapeHtml(f.ccaa)} · ${fmtFecha(f.inicio)}${f.inicio!==f.fin?' – '+fmtFecha(f.fin):''}</div>
+  <div class="contenido">${cartelesHtml}</div>
+  ${resumenHtml}
+  <div class="pie">🏕️ Generado desde Festivales con acampada</div>
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/htmltopwa/sw.js', { scope: '/htmltopwa/' })
+      .then(function(registration) {
+        console.log('✅ Service Worker registrado con scope:', registration.scope);
+      })
+      .catch(function(err) {
+        console.log('❌ Error al registrar SW:', err);
+      });
+  });
+}
+</script>
+</body>
+</html>`;
+}
+
+function descargarFicha(f, resumenTexto){
+  const html = generarFichaHTML(f, resumenTexto);
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const nombreLimpio = (f.nombre||'festival').replace(/[^a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]/g,'').replace(/\s+/g,'_');
+  a.download = `${nombreLimpio}_ficha.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function compartirFicha(f, resumenTexto){
+  const html = generarFichaHTML(f, resumenTexto);
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const nombreLimpio = (f.nombre||'festival').replace(/[^a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]/g,'').replace(/\s+/g,'_');
+  const file = new File([blob], `${nombreLimpio}_ficha.html`, { type:'text/html' });
+
+  if (navigator.share && navigator.canShare && navigator.canShare({ files:[file] })) {
+    navigator.share({ title:`Ficha de ${f.nombre}`, text:`📋 Ficha de ${f.nombre}`, files:[file] })
+      .catch(error=>{
+        if (error.name !== 'AbortError') { descargarFicha(f, resumenTexto); }
+      });
+  } else {
+    descargarFicha(f, resumenTexto);
+  }
+}
+
+function abrirModal(f, esBusquedaTemporal){
+  const est = estado(f);
+  const col = est==='proximo'?'#3a9b6e':est==='curso'?'#e0a93a':'#b23a2e';
+  const etq = est==='proximo'?'Por celebrarse':est==='curso'?'En curso':'Ya pasado';
+  
+  const webSano = safeUrl(f.web);
+  const cartelSano = safeUrl(f.cartel);
+  const imagenes = [f.cartel, ...(f.carteles||[])].map(safeUrl).filter(Boolean);
+
+  const carruselHtml = imagenes.length ? `
+    <div class="carousel-cartel" id="carouselCartel" data-index="0">
+      <div class="carousel-track">
+        ${imagenes.map((url,i)=>`<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="carousel-slide" style="display:${i===0?'block':'none'}"><img class="cartel-img" src="${escapeHtml(url)}" alt="Cartel ${i+1}" onerror="this.closest('a').style.display='none'"></a>`).join('')}
+      </div>
+      ${imagenes.length>1 ? `
+        <div class="carousel-nav">
+          <button type="button" class="carousel-btn" onclick="moverCarrusel(-1)">‹</button>
+          <span class="carousel-contador">1 / ${imagenes.length}</span>
+          <button type="button" class="carousel-btn" onclick="moverCarrusel(1)">›</button>
+        </div>
+      ` : ''}
+    </div>
+  ` : '';
+
+  modalBox.innerHTML = `
+    <button class="modal-close" id="modalCerrar">✕</button>
+    <div id="modalVista">
+      <h3>${escapeHtml(f.nombre)}</h3>
+      <div class="sub">${escapeHtml(f.localidad)} · ${escapeHtml(f.ccaa)}</div>
+      <div style="margin:4px 0;display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="tag">${escapeHtml(f.estilo)}</span>
+        <span class="tag" style="background:${col};color:#fff;">${etq}</span>
+        <span class="tag tag-ok">${etiquetaPrecioConCantidad(f)}</span>
+        <span class="tag tag-ok">${etiquetaAcampada(f.acampada)}</span>
+      </div>
+      <div class="detalle">
+        <div><span class="etq">📅 Inicio</span><div class="val">${fmtFecha(f.inicio)}</div></div>
+        <div><span class="etq">📅 Fin</span><div class="val">${fmtFecha(f.fin)}</div></div>
+        <div><span class="etq">📍 Coordenadas</span><div class="val">${escapeHtml(f.lat)}, ${escapeHtml(f.lng)}</div></div>
+        <div><span class="etq">🔗 Web</span><div class="val">${webSano ? `<a href="${escapeHtml(webSano)}" target="_blank" rel="noopener noreferrer">${escapeHtml(webSano)}</a>` : '—'}</div></div>
+      </div>
+      ${carruselHtml}
+      
+      <!-- Contenedor para el resumen IA -->
+      <div class="resumen-container" id="resumenContainer">
+        <div id="resumenTexto" class="texto"></div>
+        <div id="resumenCargando" class="cargando">⏳ Generando resumen...</div>
+      </div>
+
+      <!-- Contenedor para el cartel de artistas extraído por IA -->
+      <div class="resumen-container" id="artistasContainer" style="display:none;">
+        <div id="artistasCargando" class="cargando" style="display:none;">⏳ Leyendo el cartel...</div>
+        <div id="artistasPreview"></div>
+      </div>
+
+      <div class="modal-actions-bar">
+        <button class="btn-edit" id="modalEditar">✏️ Editar</button>
+        <a class="btn-edit" href="https://www.google.com/search?q=${encodeURIComponent(f.nombre + ' ' + f.localidad + ' festival')}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">🔎 Buscar info</a>
+        ${getPerplexityKey() ? '<button class="btn-edit" id="btnResumenIA">🤖 Resumen IA</button>' : ''}
+        ${getPerplexityKey() ? '<button class="btn-edit" id="btnExtraerArtistas">🎤 Extraer artistas</button>' : ''}
+        ${(getArtistasGuardados(f.id)||[]).length ? '<button class="btn-edit" id="btnAbrirReproductor">🎧 Reproductor</button>' : ''}
+        <button class="btn-edit" id="btnCompartirFicha" title="Compartir ficha">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+          Compartir
+        </button>
+        <button class="btn-del" id="modalEliminar">🗑️ Eliminar</button>
+        <button class="btn-edit" id="modalVerMapa">📍 Ver en mapa</button>
+      </div>
+    </div>
+    <div id="modalEdicion" style="display:none;">
+      <h3>✏️ Editar: ${escapeHtml(f.nombre)}</h3>
+      <div class="edit-grid">
+        <div><label>Nombre</label><input id="editNombre" value="${escapeHtml(f.nombre)}"></div>
+        <div>
+          <label>CCAA / país</label>
+          <input id="editCCAA" list="listaCCAA" value="${escapeHtml(f.ccaa||'')}">
+        </div>
+        <div><label>Localidad</label>
+          <div class="web-input-wrapper">
+            <input id="editLocalidad" value="${escapeHtml(f.localidad)}">
+            <button type="button" class="btn-open-web" id="editBtnOpenMapa" title="Abrir en Google Maps en una nueva pestaña">📍 Mapa</button>
+          </div>
+        </div>
+        <div><label>Estilo</label><input id="editEstilo" value="${escapeHtml(f.estilo)}"></div>
+        <div><label>Inicio</label><input type="date" id="editInicio" value="${escapeHtml(f.inicio)}"></div>
+        <div><label>Fin</label><input type="date" id="editFin" value="${escapeHtml(f.fin)}"></div>
+        <div><label>Coordenadas</label><input id="editCoords" value="${escapeHtml((f.lat!==undefined&&f.lat!==null?f.lat:'')+','+(f.lng!==undefined&&f.lng!==null?f.lng:''))}"></div>
+        <div><label>Precio</label><select id="editPrecio"><option value="gratis" ${f.precio==='gratis'?'selected':''}>Gratis</option><option value="pago" ${f.precio==='pago'?'selected':''}>De pago</option><option value="pago_solidario" ${f.precio==='pago_solidario'?'selected':''}>Pago solidario</option><option value="desconocido" ${f.precio==='desconocido'?'selected':''}>Sin confirmar</option></select></div>
+        <div id="editCantidadWrap" style="${(f.precio==='pago'||f.precio==='pago_solidario')?'':'display:none'}"><label>Cantidad (€)</label><input type="number" id="editCantidad" min="0" step="0.01" value="${f.precio_cantidad!==undefined&&f.precio_cantidad!==null?escapeHtml(f.precio_cantidad):''}" placeholder="Ej: 12"></div>
+        <div><label>Acampada</label><select id="editAcampada"><option value="gratis" ${f.acampada==='gratis'?'selected':''}>Gratuita</option><option value="pago" ${f.acampada==='pago'?'selected':''}>De pago</option><option value="no" ${f.acampada==='no'?'selected':''}>Sin acampada</option><option value="desconocido" ${f.acampada==='desconocido'?'selected':''}>Sin confirmar</option></select></div>
+        <div><label>Web</label><input id="editWeb" value="${escapeHtml(f.web||'')}"></div>
+        <div><label>URL cartel (imagen)</label>
+          <div class="cartel-principal-wrapper">
+            <input id="editCartel" value="${escapeHtml(f.cartel||'')}">
+            <button type="button" class="btn-add-cartel" id="editBtnAddCartel" title="Añadir otro cartel">➕</button>
+          </div>
+        </div>
+        <div style="grid-column:1/-1;${(f.carteles && f.carteles.length) ? '' : 'display:none'}" id="editCartelesWrap">
+          <label>Carteles adicionales</label>
+          <div class="carteles-lista" id="editCartelesLista">
+            ${(f.carteles||[]).map(url => `
+              <div class="cartel-fila"><input class="cartel-url" value="${escapeHtml(url)}" placeholder="https://..."><button type="button" class="btn-quitar-cartel" title="Quitar">✕</button></div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions-bar">
+        <button class="btn-save" id="modalGuardar">💾 Guardar cambios</button>
+        <button class="btn-edit" id="modalCancelarEdicion">Cancelar</button>
+      </div>
+    </div>
+  `;
+  
+  modalOverlay.classList.add('open');
+  const cerrarYLimpiar = ()=>{
+    modalOverlay.classList.remove('open');
+    if (esBusquedaTemporal && marcadoresTemporales.has(f.id)) {
+      marcadoresTemporales.delete(f.id);
+      const sigueVisible = festivalesFiltrados.some(x=>String(x.id)===String(f.id));
+      if (!sigueVisible && markers[f.id]) {
+        map.removeLayer(markers[f.id]);
+        delete markers[f.id];
+      }
+    }
+  };
+  document.getElementById('modalCerrar').addEventListener('click', cerrarYLimpiar);
+  modalOverlay.addEventListener('click', (e)=>{ if(e.target===modalOverlay) cerrarYLimpiar(); });
+  
+  document.getElementById('modalEditar').addEventListener('click', ()=>{
+    document.getElementById('modalVista').style.display='none';
+    document.getElementById('modalEdicion').style.display='block';
+  });
+  document.getElementById('modalCancelarEdicion').addEventListener('click', ()=>{
+    document.getElementById('modalVista').style.display='block';
+    document.getElementById('modalEdicion').style.display='none';
+  });
+  document.getElementById('editPrecio').addEventListener('change', function(){
+    document.getElementById('editCantidadWrap').style.display = (this.value==='pago'||this.value==='pago_solidario') ? '' : 'none';
+  });
+  const editLocalidad = document.getElementById('editLocalidad');
+  const editBtnOpenMapa = document.getElementById('editBtnOpenMapa');
+  editBtnOpenMapa.disabled = !editLocalidad.value.trim();
+  editLocalidad.addEventListener('input', ()=>{
+    editBtnOpenMapa.disabled = !editLocalidad.value.trim();
+  });
+  editBtnOpenMapa.addEventListener('click', ()=>{
+    const q = editLocalidad.value.trim();
+    if (q) window.open('https://www.google.com/maps/search/' + encodeURIComponent(q), '_blank');
+  });
+
+  // Carteles adicionales: añadir/quitar filas
+  const editCartelesWrap = document.getElementById('editCartelesWrap');
+  const editCartelesLista = document.getElementById('editCartelesLista');
+  document.getElementById('editBtnAddCartel').addEventListener('click', ()=>{
+    editCartelesWrap.style.display = '';
+    const fila = document.createElement('div');
+    fila.className = 'cartel-fila';
+    fila.innerHTML = '<input class="cartel-url" placeholder="https://..."><button type="button" class="btn-quitar-cartel" title="Quitar">✕</button>';
+    editCartelesLista.appendChild(fila);
+    fila.querySelector('input').focus();
+  });
+  editCartelesLista.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.btn-quitar-cartel');
+    if (btn) btn.closest('.cartel-fila').remove();
+  });
+  
+  document.getElementById('modalGuardar').addEventListener('click', async ()=>{
+    const coordsEdit = parseCoords(document.getElementById('editCoords').value);
+    if (!coordsEdit) {
+      alert('Coordenadas no válidas. Usa el formato lat,lng (ej: 42.793556,-3.271308).');
+      return;
+    }
+    const editado = {...f,
+      nombre: document.getElementById('editNombre').value.trim(),
+      ccaa: document.getElementById('editCCAA').value,
+      localidad: document.getElementById('editLocalidad').value.trim(),
+      estilo: document.getElementById('editEstilo').value.trim(),
+      inicio: document.getElementById('editInicio').value,
+      fin: document.getElementById('editFin').value,
+      lat: coordsEdit.lat,
+      lng: coordsEdit.lng,
+      precio: document.getElementById('editPrecio').value,
+      precio_cantidad: (()=>{
+        const p = document.getElementById('editPrecio').value;
+        const raw = document.getElementById('editCantidad').value;
+        return (p==='pago'||p==='pago_solidario') && raw !== '' ? parseFloat(raw) : null;
+      })(),
+      acampada: document.getElementById('editAcampada').value,
+      web: document.getElementById('editWeb').value.trim(),
+      cartel: document.getElementById('editCartel').value.trim(),
+      carteles: Array.from(document.querySelectorAll('#editCartelesLista .cartel-url'))
+        .map(inp => inp.value.trim())
+        .filter(v => v !== '')
+    };
+    try {
+      await supabase.update(f.id, editado);
+      modalOverlay.classList.remove('open');
+      await cargarDatos();
+    } catch(e) {
+      alert('Error al guardar: '+e.message);
+    }
+  });
+  
+  document.getElementById('modalEliminar').addEventListener('click', async ()=>{
+    if(confirm(`¿Eliminar "${f.nombre}"?`)){
+      try {
+        await supabase.delete(f.id);
+        modalOverlay.classList.remove('open');
+        await cargarDatos();
+      } catch(e) {
+        alert('Error al eliminar: '+e.message);
+      }
+    }
+  });
+  
+  document.getElementById('modalVerMapa').addEventListener('click', ()=>{
+    modalOverlay.classList.remove('open');
+    map.setView([f.lat, f.lng], 12);
+    setTimeout(()=>{ 
+      if(markers[f.id]) markers[f.id].openPopup(); 
+      actualizarTarjetas();
+    }, 300);
+  });
+
+  // ---- BOTÓN "REPRODUCTOR" ----
+  const btnAbrirReproductor = document.getElementById('btnAbrirReproductor');
+  if (btnAbrirReproductor) btnAbrirReproductor.addEventListener('click', ()=>{
+    const lista = getArtistasGuardados(f.id) || [];
+    abrirModalReproductor(f, lista);
+  });
+
+  // ---- BOTÓN "RESUMEN IA" ----
+  const btnResumen = document.getElementById('btnResumenIA');
+  const resumenContainer = document.getElementById('resumenContainer');
+  const resumenTexto = document.getElementById('resumenTexto');
+  const resumenCargando = document.getElementById('resumenCargando');
+
+  // ---- BOTÓN "COMPARTIR FICHA" ----
+  const btnCompartir = document.getElementById('btnCompartirFicha');
+  btnCompartir.addEventListener('click', async ()=>{
+    const textoOriginal = btnCompartir.innerHTML;
+    btnCompartir.disabled = true;
+    btnCompartir.textContent = '⏳';
+    try {
+      // Si ya hay un resumen IA visible en esta ficha, se incluye; si no, se comparte sin él
+      const resumenActual = (resumenContainer && resumenContainer.style.display !== 'none' && resumenTexto)
+        ? resumenTexto.textContent.trim()
+        : '';
+      compartirFicha(f, resumenActual);
+    } catch (error) {
+      console.error('Error al compartir ficha:', error);
+      alert('Hubo un problema al generar la ficha. Inténtalo de nuevo.');
+    } finally {
+      btnCompartir.disabled = false;
+      btnCompartir.innerHTML = textoOriginal;
+    }
+  });
+
+  if (btnResumen) btnResumen.addEventListener('click', async ()=>{
+    if (avisarSiFaltaClavePerplexity()) return;
+    resumenContainer.style.display = 'block';
+    resumenCargando.style.display = 'block';
+    resumenTexto.textContent = '';
+    btnResumen.disabled = true;
+    btnResumen.textContent = '⏳ Cargando...';
+
+    try {
+      const resumen = await obtenerResumen(f);
+      resumenCargando.style.display = 'none';
+      resumenTexto.textContent = typeof resumen === 'string' ? resumen : 'Error: el resumen no es texto.';
+    } catch (error) {
+      resumenCargando.style.display = 'none';
+      if (error.message === 'CONFIG_REQUIRED') {
+        resumenTexto.textContent = '⚠️ Falta configurar tu clave de Perplexity.';
+        abrirModalPerplexityConfig('seccionClave');
+      } else if (error.message === 'AUTH_ERROR') {
+        resumenTexto.textContent = '❌ Tu clave de Perplexity no es válida. Revísala en Ajustes.';
+        abrirModalPerplexityConfig('seccionClave');
+      } else {
+        resumenTexto.textContent = '❌ No se pudo obtener el resumen.';
+      }
+      console.error(error);
+    } finally {
+      btnResumen.disabled = false;
+      btnResumen.textContent = '🤖 Resumen IA';
+    }
+  });
+
+  // ---- BOTÓN "EXTRAER ARTISTAS" ----
+  const btnExtraerArtistas = document.getElementById('btnExtraerArtistas');
+  const artistasContainer = document.getElementById('artistasContainer');
+  const artistasCargando = document.getElementById('artistasCargando');
+  const artistasPreview = document.getElementById('artistasPreview');
+
+  function pintarPreviewArtistas(lista, yaGuardado){
+    if (!lista.length) {
+      artistasPreview.innerHTML = `<p style="font-size:0.85rem;color:#6e7f76">No se ha encontrado ningún artista fiable. Prueba a añadir la web oficial o el cartel primero.</p>`;
+      return;
+    }
+    // Orden por día (los que no tienen día conocido, al final)
+    lista = [...lista].sort((a,b)=>{
+      if (!a.dia && !b.dia) return 0;
+      if (!a.dia) return 1;
+      if (!b.dia) return -1;
+      return a.dia.localeCompare(b.dia);
+    });
+    const filas = lista.map((a,i) => `
+      <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;padding:0.35rem 0;border-bottom:1px solid #e6e0d4;box-sizing:border-box;width:100%">
+        <input type="text" value="${escapeHtml(a.nombre)}" data-idx="${i}" class="artista-nombre" style="flex:1 1 140px;min-width:0;padding:0.35rem 0.5rem;border-radius:6px;border:1px solid #d9d0c4;font-size:0.85rem;box-sizing:border-box">
+        <input type="date" value="${a.dia||''}" data-idx="${i}" class="artista-dia" style="flex:0 1 140px;min-width:0;padding:0.35rem 0.4rem;border-radius:6px;border:1px solid #d9d0c4;font-size:0.8rem;box-sizing:border-box">
+        <button type="button" data-idx="${i}" class="artista-quitar" title="Quitar" style="background:none;border:none;color:#a33;font-size:1rem;cursor:pointer;padding:0 0.3rem;flex:0 0 auto">✕</button>
+      </div>`).join('');
+    artistasPreview.innerHTML = `
+      <p style="font-size:0.8rem;color:#6e7f76;margin:0 0 0.4rem">📋 ${lista.length} artista(s)${yaGuardado ? ' (guardados en este dispositivo)' : ' encontrados'}. Revisa y corrige antes de guardar:</p>
+      <div id="artistasFilas" style="width:100%;max-width:100%;overflow:hidden">${filas}</div>
+      <div style="display:flex;gap:0.6rem;margin-top:0.7rem;flex-wrap:wrap">
+        <button type="button" id="btnGuardarArtistas" class="btn-open-web" style="flex:1;justify-content:center">💾 Guardar en este dispositivo</button>
+        ${yaGuardado ? '<button type="button" id="btnVolverABuscarArtistas" class="btn-quitar-cartel" style="flex:0 0 auto;padding:0 1rem;width:auto">🔄 Volver a buscar</button>' : ''}
+        <button type="button" id="btnDescartarArtistas" class="btn-quitar-cartel" style="flex:0 0 auto;padding:0 1rem;width:auto">Descartar</button>
+      </div>
+      <div id="artistasEstado" style="font-size:0.8rem;margin-top:0.5rem;min-height:1.1em"></div>`;
+
+    let listaActual = lista.map(a=>({...a}));
+    artistasPreview.querySelectorAll('.artista-nombre').forEach(inp=>{
+      inp.addEventListener('input', ()=>{ listaActual[+inp.dataset.idx].nombre = inp.value.trim(); });
+    });
+    artistasPreview.querySelectorAll('.artista-dia').forEach(inp=>{
+      inp.addEventListener('input', ()=>{ listaActual[+inp.dataset.idx].dia = inp.value || null; });
+    });
+    artistasPreview.querySelectorAll('.artista-quitar').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const fila = btn.closest('div[style]');
+        const idx = +btn.dataset.idx;
+        listaActual[idx] = null;
+        fila.remove();
+      });
+    });
+    document.getElementById('btnDescartarArtistas').addEventListener('click', ()=>{
+      artistasContainer.style.display = 'none';
+      artistasPreview.innerHTML = '';
+    });
+    const btnVolver = document.getElementById('btnVolverABuscarArtistas');
+    if (btnVolver) btnVolver.addEventListener('click', ()=>{
+      lanzarExtraccionArtistas(true);
+    });
+    document.getElementById('btnGuardarArtistas').addEventListener('click', ()=>{
+      const estadoEl = document.getElementById('artistasEstado');
+      const finalLista = listaActual.filter(Boolean).filter(a=>a.nombre && a.nombre.trim());
+      try {
+        guardarArtistasLocal(f.id, finalLista);
+        estadoEl.style.color = '#1e5a3e';
+        estadoEl.textContent = '✅ Guardado en este dispositivo.';
+      } catch(e) {
+        estadoEl.style.color = '#b23a2e';
+        estadoEl.textContent = '❌ Error al guardar: ' + e.message;
+        console.error(e);
+      }
+    });
+  }
+
+  async function lanzarExtraccionArtistas(forzarNuevaBusqueda){
+    if (avisarSiFaltaClavePerplexity()) return;
+    artistasContainer.style.display = 'block';
+
+    if (!forzarNuevaBusqueda) {
+      const guardado = getArtistasGuardados(f.id);
+      if (guardado && guardado.length) {
+        artistasCargando.style.display = 'none';
+        pintarPreviewArtistas(guardado, true);
+        return;
+      }
+    }
+
+    artistasCargando.style.display = 'block';
+    artistasPreview.innerHTML = '';
+    btnExtraerArtistas.disabled = true;
+    btnExtraerArtistas.textContent = '⏳ Leyendo...';
+
+    try {
+      const lista = await extraerArtistas(f);
+      artistasCargando.style.display = 'none';
+      pintarPreviewArtistas(lista, false);
+    } catch (error) {
+      artistasCargando.style.display = 'none';
+      if (error.message === 'CONFIG_REQUIRED') {
+        artistasPreview.innerHTML = '⚠️ Falta configurar tu clave de Perplexity.';
+        abrirModalPerplexityConfig('seccionClave');
+      } else if (error.message === 'AUTH_ERROR') {
+        artistasPreview.innerHTML = '❌ Tu clave de Perplexity no es válida. Revísala en Ajustes.';
+        abrirModalPerplexityConfig('seccionClave');
+      } else {
+        artistasPreview.innerHTML = '❌ No se pudo extraer el cartel de artistas.';
+      }
+      console.error(error);
+    } finally {
+      btnExtraerArtistas.disabled = false;
+      btnExtraerArtistas.textContent = '🎤 Extraer artistas';
+    }
+  }
+
+  if (btnExtraerArtistas) btnExtraerArtistas.addEventListener('click', ()=> lanzarExtraccionArtistas(false));
+}
+
+// ============================================================
+// FUNCIÓN PARA OBTENER RESUMEN DE UN FESTIVAL
+// ============================================================
+async function obtenerResumen(festival) {
+  const config = getPerplexityConfig();
+  if (!config.key) throw new Error('CONFIG_REQUIRED');
+
+  const nombre = festival.nombre;
+  const localidad = festival.localidad || '';
+  const ccaa = festival.ccaa || '';
+  const ubicacion = localidad + (ccaa ? ', ' + ccaa : '');
+  const prompt = config.resumen.prompt
+    .replace(/\{nombre\}/g, nombre)
+    .replace(/\{ubicacion\}/g, ubicacion);
+
+  const payload = {
+    model: MODEL,
+    messages: [
+      { role: "system", content: "Eres un asistente que redacta resúmenes descriptivos de festivales. SOLO incluyes información EXPLÍCITA Y CONFIRMADA. Si un dato no está confirmado, NO LO MENCIONAS. No mencionas fuentes. No usas lenguaje de probabilidad. Respondes en español, en texto plano, sin Markdown." },
+      { role: "user", content: prompt }
+    ],
+    temperature: config.resumen.temperature,
+    max_tokens: config.resumen.maxTokens,
+    stream: false
+  };
+
+  try {
+    const response = await fetch(PERPLEXITY_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.key}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) throw new Error('AUTH_ERROR');
+      const error = await response.text();
+      throw new Error(`Error HTTP ${response.status}: ${error}`);
+    }
+
+    const data = await response.json();
+    let resumen = data.choices?.[0]?.message?.content;
+    
+    if (!resumen) return 'No se encontró información para este festival.';
+    if (typeof resumen !== 'string') resumen = JSON.stringify(resumen);
+
+    resumen = resumen.replace(/\[\d+\]/g, '');
+    resumen = resumen.replace(/\*\*/g, '');
+    resumen = resumen.replace(/\*/g, '');
+    resumen = resumen.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+    resumen = resumen.replace(/https?:\/\/[^\s]+/g, '');
+    resumen = resumen.replace(/\s+/g, ' ').trim();
+    if (resumen.length > 0 && !resumen.endsWith('.') && !resumen.endsWith('!') && !resumen.endsWith('?')) {
+      resumen += '.';
+    }
+    return resumen;
+
+  } catch (error) {
+    console.error('Error en obtenerResumen:', error);
+    throw error;
+  }
+}
+
+// ============================================================
+// CACHÉ LOCAL DEL CARTEL DE ARTISTAS POR FESTIVAL (localStorage, por dispositivo)
+// ============================================================
+const ARTISTAS_STORAGE_PREFIX = "festGratisArtistas_";
+function getArtistasGuardados(festivalId){
+  try {
+    const raw = localStorage.getItem(ARTISTAS_STORAGE_PREFIX + festivalId);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : null;
+  } catch(e) { return null; }
+}
+function guardarArtistasLocal(festivalId, lista){
+  localStorage.setItem(ARTISTAS_STORAGE_PREFIX + festivalId, JSON.stringify(lista));
+}
+
+// ============================================================
+// FUNCIÓN PARA EXTRAER EL CARTEL DE ARTISTAS DE UN FESTIVAL
+// Prioridad: 1) imagen del cartel  2) web oficial  3) búsqueda general
+// ============================================================
+async function extraerArtistas(festival) {
+  const config = getPerplexityConfig();
+  if (!config.key) throw new Error('CONFIG_REQUIRED');
+
+  const nombre = festival.nombre;
+  const ubicacion = (festival.localidad || '') + (festival.ccaa ? ', ' + festival.ccaa : '');
+  const web = safeUrl(festival.web) || '';
+  const cartelUrl = safeUrl(festival.cartel) || (festival.carteles && festival.carteles.length ? safeUrl(festival.carteles[0]) : '');
+
+  const systemPrompt = `Eres un asistente que identifica el cartel de artistas de un festival de música.
+Sigue ESTRICTAMENTE este orden de prioridad para las fuentes:
+1) Si se te adjunta una imagen del cartel oficial, léela primero y transcribe los nombres de artistas que aparezcan en ella.
+2) Verifica y completa esa lista consultando la web oficial del festival, si se te indica una.
+3) Si sigue faltando información (por ejemplo el día de actuación de algún artista), complétala con una búsqueda general por internet.
+No inventes artistas ni días. Si no tienes certeza sobre el día de un artista, pon su "dia" a null.
+Responde ÚNICAMENTE con un array JSON válido, sin explicaciones, sin backticks ni bloques de código, con este formato exacto:
+[{"nombre":"Nombre del artista","dia":"YYYY-MM-DD"}]
+Usa null en "dia" cuando no lo sepas con certeza. No repitas artistas.`;
+
+  const textoUsuario = `Festival: "${nombre}" (${ubicacion}).
+Fechas del festival: del ${festival.inicio || '?'} al ${festival.fin || '?'} (usa este rango para deducir la fecha exacta si el cartel solo indica el día de la semana).
+${web ? 'Web oficial: ' + web : 'No hay web oficial registrada para este festival.'}
+${cartelUrl ? 'Te adjunto la imagen del cartel oficial: analízala primero, y usa la web oficial o una búsqueda general solo para verificar o completar días si hace falta.' : 'No hay imagen de cartel disponible: básate en la web oficial y, si no basta, en una búsqueda general por internet.'}`;
+
+  function construirPayload(incluirImagen){
+    const contenidoUsuario = (incluirImagen && cartelUrl)
+      ? [
+          { type: "text", text: textoUsuario },
+          { type: "image_url", image_url: { url: cartelUrl } }
+        ]
+      : textoUsuario;
+    return {
+      model: MODEL,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: contenidoUsuario }
+      ],
+      temperature: 0.1,
+      max_tokens: 2000,
+      stream: false
+    };
+  }
+
+  async function llamar(payload){
+    const response = await fetch(PERPLEXITY_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.key}`
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) {
+      if (response.status === 401) throw new Error('AUTH_ERROR');
+      const error = await response.text();
+      const err = new Error(`Error HTTP ${response.status}: ${error}`);
+      err.status = response.status;
+      throw err;
+    }
+    return response.json();
+  }
+
+  let data;
+  try {
+    // 1) Intento con la imagen del cartel, si hay una disponible
+    data = await llamar(construirPayload(true));
+  } catch (error) {
+    if (error.message === 'AUTH_ERROR') throw error;
+    if (cartelUrl) {
+      // La imagen puede no ser compatible o fallar puntualmente: reintentamos solo con texto (web oficial + búsqueda general)
+      console.warn('Fallo la lectura del cartel como imagen, reintentando solo con texto:', error);
+      data = await llamar(construirPayload(false));
+    } else {
+      throw error;
+    }
+  }
+
+  let contenido = data.choices?.[0]?.message?.content;
+  if (!contenido) return [];
+  if (typeof contenido !== 'string') contenido = JSON.stringify(contenido);
+
+  // Limpieza por si el modelo envuelve el JSON en bloques de código
+  let limpio = contenido.trim().replace(/^```(json)?/i, '').replace(/```$/,'').trim();
+
+  let lista;
+  try {
+    lista = JSON.parse(limpio);
+  } catch (e) {
+    const match = limpio.match(/\[[\s\S]*\]/);
+    if (match) {
+      try { lista = JSON.parse(match[0]); } catch(e2) { lista = null; }
+    }
+  }
+  if (!Array.isArray(lista)) return [];
+
+  return lista
+    .filter(a => a && typeof a.nombre === 'string' && a.nombre.trim())
+    .map(a => ({ nombre: a.nombre.trim(), dia: (typeof a.dia === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(a.dia)) ? a.dia : null }));
+}
+
+// ============================================================
+// BÚSQUEDA DE CANCIONES POR ARTISTA (YouTube Data API, con caché local)
+// ============================================================
+const YT_SONGS_CACHE_PREFIX = "festGratisYtSongs_";
+function normalizarNombreArtista(nombre){
+  return nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+}
+async function buscarCancionesYoutube(nombreArtista){
+  const slug = normalizarNombreArtista(nombreArtista);
+  const cacheKey = YT_SONGS_CACHE_PREFIX + slug;
+  try {
+    const raw = localStorage.getItem(cacheKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) return parsed;
+    }
+  } catch(e) { /* caché corrupta, seguimos y la regeneramos */ }
+
+  const key = getYoutubeKey();
+  if (!key) throw new Error('CONFIG_REQUIRED');
+
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoCategoryId=10&maxResults=15&q=${encodeURIComponent(nombreArtista + ' official')}&key=${key}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    const errBody = await response.json().catch(()=>({}));
+    const msg = errBody?.error?.message || `Error HTTP ${response.status}`;
+    throw new Error(msg);
+  }
+  const data = await response.json();
+  const canciones = (data.items||[])
+    .filter(it => it.id && it.id.videoId)
+    .map(it => ({ id: it.id.videoId, title: it.snippet.title }));
+
+  if (canciones.length) {
+    try { localStorage.setItem(cacheKey, JSON.stringify(canciones)); } catch(e) {}
+  }
+  return canciones;
+}
+
+// ============================================================
+// REPRODUCTOR FESTIPLAYER 2000 (modal)
+// ============================================================
+const reproductorModalOverlay = document.getElementById('reproductorModalOverlay');
+const fpPlaylist = document.getElementById('fpPlaylist');
+const fpTrackName = document.getElementById('fpTrackName');
+const fpTrackArtist = document.getElementById('fpTrackArtist');
+const fpStatusText = document.getElementById('fpStatusText');
+const fpEq = document.getElementById('fpEq');
+const fpPlayBtn = document.getElementById('fpPlayBtn');
+const fpNextBtn = document.getElementById('fpNextBtn');
+const fpPrevBtn = document.getElementById('fpPrevBtn');
+const fpSeekSlider = document.getElementById('fpSeekSlider');
+const fpTimeCurrent = document.getElementById('fpTimeCurrent');
+const fpTimeDuration = document.getElementById('fpTimeDuration');
+const fpYtFrame = document.getElementById('fpYtFrame');
+const fpPlaceholder = document.getElementById('fpPlaceholder');
+const fpHint = document.getElementById('fpHint');
+
+let fpArtistData = [];
+let fpCurrentArtistIndex = -1;
+let fpCurrentSongIndex = -1;
+let fpPlaying = false;
+let fpDuration = 0;
+let fpIsSeeking = false;
+let fpListeningInterval = null;
+
+function fpFormatTime(sec){
+  if (!isFinite(sec) || sec < 0) sec = 0;
+  const m = Math.floor(sec/60);
+  const s = Math.floor(sec%60);
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function fpYtEmbedSrc(videoId){
+  return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&controls=0&playsinline=1&rel=0&modestbranding=1&origin=${encodeURIComponent(location.origin)}`;
+}
+function fpPostCmd(func, args){
+  if (!fpYtFrame.contentWindow) return;
+  fpYtFrame.contentWindow.postMessage(JSON.stringify({ event:'command', func, args: args||[] }), '*');
+}
+
+function abrirModalReproductor(f, artistas){
+  fpArtistData = [...artistas]
+    .filter(a => a && a.nombre)
+    .sort((a,b)=>{
+      if (!a.dia && !b.dia) return 0;
+      if (!a.dia) return 1;
+      if (!b.dia) return -1;
+      return a.dia.localeCompare(b.dia);
+    })
+    .map(a => ({ nombre: a.nombre, dia: a.dia, canciones: null }));
+
+  fpCurrentArtistIndex = -1;
+  fpCurrentSongIndex = -1;
+  fpPlaying = false;
+  fpPlaceholder.style.display = 'flex';
+  fpYtFrame.style.display = 'none';
+  fpYtFrame.src = '';
+  fpTrackName.textContent = '—';
+  fpTrackArtist.textContent = '—';
+  fpStatusText.textContent = 'LISTO';
+  fpEq.classList.add('fp-paused');
+  fpSeekSlider.value = 0;
+  fpTimeCurrent.textContent = '0:00';
+  fpTimeDuration.textContent = '0:00';
+  fpHint.textContent = '';
+
+  renderFpPlaylist();
+  reproductorModalOverlay.classList.add('open');
+}
+
+function renderFpPlaylist(){
+  fpPlaylist.innerHTML = '';
+  fpArtistData.forEach((a, ai) => {
+    const div = document.createElement('div');
+    div.className = 'fp-artist';
+    div.dataset.artistIndex = ai;
+
+    const header = document.createElement('div');
+    header.className = 'fp-artist-header';
+    header.innerHTML = `<span class="fp-arrow">▶</span><span>${escapeHtml(a.nombre)}</span>${a.dia ? `<span class="fp-dia">${fmtFecha(a.dia)}</span>` : ''}`;
+    header.addEventListener('click', () => toggleFpArtist(ai));
+    div.appendChild(header);
+
+    const songsDiv = document.createElement('div');
+    songsDiv.className = 'fp-songs';
+    songsDiv.id = `fpSongs${ai}`;
+    div.appendChild(songsDiv);
+
+    fpPlaylist.appendChild(div);
+  });
+}
+
+async function toggleFpArtist(ai){
+  const div = fpPlaylist.querySelector(`.fp-artist[data-artist-index="${ai}"]`);
+  if (!div) return;
+  if (div.classList.contains('fp-open')) {
+    div.classList.remove('fp-open');
+    return;
+  }
+  div.classList.add('fp-open');
+
+  const artist = fpArtistData[ai];
+  const songsDiv = document.getElementById(`fpSongs${ai}`);
+  if (artist.canciones) { renderFpSongs(ai); return; }
+
+  songsDiv.innerHTML = `<div class="fp-cargando-cancion">⏳ Buscando canciones de ${escapeHtml(artist.nombre)}...</div>`;
+  try {
+    const canciones = await buscarCancionesYoutube(artist.nombre);
+    artist.canciones = canciones;
+    renderFpSongs(ai);
+  } catch (error) {
+    if (error.message === 'CONFIG_REQUIRED') {
+      songsDiv.innerHTML = `<div class="fp-cargando-cancion">⚠️ Falta configurar tu clave de YouTube.</div>`;
+    } else {
+      songsDiv.innerHTML = `<div class="fp-cargando-cancion">❌ No se pudieron cargar canciones (${escapeHtml(error.message)}).</div>`;
+    }
+    console.error(error);
+  }
+}
+
+function renderFpSongs(ai){
+  const artist = fpArtistData[ai];
+  const songsDiv = document.getElementById(`fpSongs${ai}`);
+  if (!artist.canciones || !artist.canciones.length) {
+    songsDiv.innerHTML = `<div class="fp-cargando-cancion">No se encontraron canciones.</div>`;
+    return;
+  }
+  songsDiv.innerHTML = artist.canciones.map((c,si) => `
+    <div class="fp-track" data-artist-index="${ai}" data-song-index="${si}">
+      <span class="fp-num">${String(si+1).padStart(2,'0')}</span>
+      <span class="fp-song">${escapeHtml(c.title)}</span>
+    </div>`).join('');
+  songsDiv.querySelectorAll('.fp-track').forEach(row => {
+    row.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fpLoadAndPlay(+row.dataset.artistIndex, +row.dataset.songIndex);
+    });
+  });
+  fpHighlightActive();
+}
+
+function fpHighlightActive(){
+  fpPlaylist.querySelectorAll('.fp-track').forEach(el => el.classList.remove('fp-active'));
+  if (fpCurrentArtistIndex === -1) return;
+  const el = fpPlaylist.querySelector(`.fp-track[data-artist-index="${fpCurrentArtistIndex}"][data-song-index="${fpCurrentSongIndex}"]`);
+  if (el) el.classList.add('fp-active');
+}
+
+function fpSetPlayingUI(isPlaying){
+  fpPlaying = isPlaying;
+  if (isPlaying) {
+    fpStatusText.textContent = 'REPRODUCIENDO';
+    fpEq.classList.remove('fp-paused');
+    fpPlayBtn.textContent = '❚❚';
+  } else {
+    fpStatusText.textContent = 'PAUSA';
+    fpEq.classList.add('fp-paused');
+    fpPlayBtn.textContent = '▶';
+  }
+}
+
+function fpLoadAndPlay(ai, si){
+  const artist = fpArtistData[ai];
+  if (!artist || !artist.canciones) return;
+  const cancion = artist.canciones[si];
+  if (!cancion) return;
+
+  fpCurrentArtistIndex = ai;
+  fpCurrentSongIndex = si;
+  fpTrackName.textContent = cancion.title;
+  fpTrackArtist.textContent = artist.nombre;
+  fpHighlightActive();
+  fpStatusText.textContent = 'CARGANDO...';
+  fpEq.classList.add('fp-paused');
+  fpHint.textContent = '';
+  fpPlaceholder.style.display = 'none';
+  fpYtFrame.style.display = 'block';
+  fpDuration = 0;
+  fpSeekSlider.value = 0;
+  fpTimeCurrent.textContent = '0:00';
+  fpTimeDuration.textContent = '0:00';
+  fpYtFrame.src = fpYtEmbedSrc(cancion.id);
+  fpStartListening();
+}
+
+function fpStartListening(){
+  if (fpListeningInterval) clearInterval(fpListeningInterval);
+  fpListeningInterval = setInterval(() => {
+    if (!fpYtFrame.contentWindow) return;
+    fpYtFrame.contentWindow.postMessage(JSON.stringify({ event:'listening', id:'fpYtFrame' }), '*');
+  }, 400);
+}
+
+function fpNextTrack(){
+  if (fpCurrentArtistIndex === -1) return;
+  const artist = fpArtistData[fpCurrentArtistIndex];
+  const nextIdx = fpCurrentSongIndex + 1;
+  if (artist.canciones && nextIdx < artist.canciones.length) fpLoadAndPlay(fpCurrentArtistIndex, nextIdx);
+}
+function fpPrevTrack(){
+  if (fpCurrentArtistIndex === -1) return;
+  const prevIdx = fpCurrentSongIndex - 1;
+  if (prevIdx >= 0) fpLoadAndPlay(fpCurrentArtistIndex, prevIdx);
+}
+
+fpPlayBtn.addEventListener('click', () => {
+  if (fpCurrentArtistIndex === -1) return;
+  if (fpPlaying) { fpPostCmd('pauseVideo'); fpSetPlayingUI(false); }
+  else { fpPostCmd('playVideo'); fpSetPlayingUI(true); }
+});
+fpNextBtn.addEventListener('click', fpNextTrack);
+fpPrevBtn.addEventListener('click', fpPrevTrack);
+
+fpSeekSlider.addEventListener('input', () => {
+  fpIsSeeking = true;
+  fpTimeCurrent.textContent = fpFormatTime(Number(fpSeekSlider.value));
+});
+fpSeekSlider.addEventListener('change', () => {
+  fpPostCmd('seekTo', [Number(fpSeekSlider.value), true]);
+  fpIsSeeking = false;
+});
+
+window.addEventListener('message', (event) => {
+  if (typeof event.data !== 'string') return;
+  let data;
+  try { data = JSON.parse(event.data); } catch(e) { return; }
+  if (data.event === 'onStateChange') {
+    if (data.info === 0) fpNextTrack();
+    else if (data.info === 1) fpSetPlayingUI(true);
+    else if (data.info === 2) fpSetPlayingUI(false);
+  }
+  if (data.event === 'infoDelivery' && data.info) {
+    if (typeof data.info.duration === 'number' && data.info.duration > 0) {
+      fpDuration = data.info.duration;
+      fpSeekSlider.max = fpDuration;
+      fpTimeDuration.textContent = fpFormatTime(fpDuration);
+    }
+    if (typeof data.info.currentTime === 'number' && !fpIsSeeking) {
+      fpSeekSlider.value = data.info.currentTime;
+      fpTimeCurrent.textContent = fpFormatTime(data.info.currentTime);
+    }
+  }
+  if (data.event === 'onReady') {
+    // nada especial por ahora
+  }
+});
+
+fpYtFrame.addEventListener('load', () => {
+  setTimeout(() => {
+    if (fpCurrentArtistIndex !== -1 && fpStatusText.textContent === 'CARGANDO...') {
+      fpHint.textContent = 'Si no suena, prueba a pulsar ▶ una vez';
+      fpStatusText.textContent = 'PAUSA';
+    }
+  }, 3000);
+});
+
+function fpCerrarReproductor(){
+  reproductorModalOverlay.classList.remove('open');
+  reproductorModalOverlay.classList.remove('fp-collapsed');
+  fpModalBoxEl.style.left = '';
+  fpModalBoxEl.style.top = '';
+  if (fpListeningInterval) clearInterval(fpListeningInterval);
+  fpPostCmd('pauseVideo');
+  fpYtFrame.src = '';
+}
+
+// ---- COLAPSAR / EXPANDIR / ARRASTRAR (mini-reproductor flotante, tipo barra de ventana) ----
+const fpModalBoxEl = document.getElementById('reproductorModalBox');
+const fpTitlebar = document.getElementById('fpTitlebar');
+reproductorModalOverlay.addEventListener('click', (e) => {
+  if (e.target === reproductorModalOverlay && !reproductorModalOverlay.classList.contains('fp-collapsed')) fpCerrarReproductor();
+});
+const fpBtnCollapse = document.getElementById('fpBtnCollapse');
+const fpBtnClose = document.getElementById('fpBtnClose');
+let fpDragging = false;
+let fpDragOffsetX = 0;
+let fpDragOffsetY = 0;
+
+function fpColapsar(){
+  if (reproductorModalOverlay.classList.contains('fp-collapsed')) return;
+  reproductorModalOverlay.classList.add('fp-collapsed');
+  const left = Math.max(4, (window.innerWidth - 260) / 2);
+  fpModalBoxEl.style.left = left + 'px';
+  fpModalBoxEl.style.top = '8px';
+  fpBtnCollapse.textContent = '▢';
+}
+function fpExpandir(){
+  if (!reproductorModalOverlay.classList.contains('fp-collapsed')) return;
+  reproductorModalOverlay.classList.remove('fp-collapsed');
+  fpModalBoxEl.style.left = '';
+  fpModalBoxEl.style.top = '';
+  fpBtnCollapse.textContent = '▁';
+}
+fpBtnCollapse.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (reproductorModalOverlay.classList.contains('fp-collapsed')) fpExpandir();
+  else fpColapsar();
+});
+fpBtnClose.addEventListener('click', (e) => {
+  e.stopPropagation();
+  fpCerrarReproductor();
+});
+
+function fpDragStart(e){
+  if (!reproductorModalOverlay.classList.contains('fp-collapsed')) return;
+  if (e.target.closest('.fp-title-btn')) return;
+  const point = e.touches ? e.touches[0] : e;
+  fpDragging = true;
+  const rect = fpModalBoxEl.getBoundingClientRect();
+  fpDragOffsetX = point.clientX - rect.left;
+  fpDragOffsetY = point.clientY - rect.top;
+}
+function fpDragMove(e){
+  if (!fpDragging) return;
+  const point = e.touches ? e.touches[0] : e;
+  let left = point.clientX - fpDragOffsetX;
+  let top = point.clientY - fpDragOffsetY;
+  left = Math.max(4, Math.min(left, window.innerWidth - 30));
+  top = Math.max(4, Math.min(top, window.innerHeight - 30));
+  fpModalBoxEl.style.left = left + 'px';
+  fpModalBoxEl.style.top = top + 'px';
+  e.preventDefault();
+}
+function fpDragEnd(){ fpDragging = false; }
+
+fpTitlebar.addEventListener('mousedown', fpDragStart);
+window.addEventListener('mousemove', fpDragMove);
+window.addEventListener('mouseup', fpDragEnd);
+fpTitlebar.addEventListener('touchstart', fpDragStart, { passive:true });
+window.addEventListener('touchmove', fpDragMove, { passive:false });
+window.addEventListener('touchend', fpDragEnd);
+
+// ============================================================
+// RENDERIZADO DE TARJETAS
+// ============================================================
+const contenedor = document.getElementById('contenedor');
+const contador = document.getElementById('contador');
+
+function datosComunesTarjeta(f){
+  const est = estado(f);
+  const col = est==='proximo'?'#3a9b6e':est==='curso'?'#e0a93a':'#b23a2e';
+  const etq = est==='proximo'?'Por celebrarse':est==='curso'?'En curso':'Ya pasado';
+  const cls = est==='proximo'?'tag-ok':est==='curso'?'':'tag-pasado';
+  const fechas = fmtFecha(f.inicio) + (f.inicio!==f.fin ? ' – '+fmtFecha(f.fin) : '');
+  const link = getEnlace(f);
+  const cartelSano = safeUrl(f.cartel);
+  const webSano = safeUrl(f.web);
+  const d = parseDate(f.inicio);
+  const diaTicket = d.getDate();
+  const mesTicket = d.toLocaleDateString('es-ES',{month:'short'}).replace('.','').toUpperCase();
+  // Color de acento: en la pestaña Calendario, el mismo color que ese festival tiene en el calendario;
+  // en la pestaña Mapa, el color de estado (próximo/en curso/pasado) de siempre.
+  const colorLateral = pestañaActiva === 'calendario' ? colorPerfilAleatorio(f.id) : col;
+  return { est, col, etq, cls, fechas, link, cartelSano, webSano, diaTicket, mesTicket, colorLateral };
+}
+
+function htmlEnlaces(f, c){
+  return c.webSano
+    ? `<div style="display:flex;gap:1rem;flex-wrap:wrap;">
+         <a class="enlace" href="${escapeHtml(c.webSano)}" target="_blank" rel="noopener noreferrer">🔎 Web oficial</a>
+         <a class="enlace" href="${escapeHtml(c.link)}" target="_blank" rel="noopener noreferrer">🔎 Buscar</a>
+       </div>`
+    : `<a class="enlace" href="${escapeHtml(c.link)}" target="_blank" rel="noopener noreferrer">🔎 Buscar</a>`;
+}
+
+// Vista 1: Tarjetas (la original)
+function tarjetaVistaTarjetas(f, c){
+  const cartelHtml = c.cartelSano ? `<img class="cartel-mini" src="${escapeHtml(c.cartelSano)}" alt="Cartel" onerror="this.style.display='none'">` : '';
+  return `
+    <div class="tarjeta" style="border-left-color:${c.colorLateral}" data-id="${escapeHtml(f.id)}">
+      <div class="nombre">${escapeHtml(f.nombre)}</div>
+      <div class="lugar">${escapeHtml(f.localidad)} · ${escapeHtml(f.ccaa)}</div>
+      <div class="fecha">${c.fechas} <span style="background:${c.col};color:#fff;padding:0.1rem 0.5rem;border-radius:12px;font-size:0.65rem;margin-left:0.3rem;">${c.etq}</span></div>
+      ${cartelHtml}
+      <div class="tags">
+        <span class="tag">${escapeHtml(f.estilo)}</span>
+        <span class="tag ${c.cls}">${etiquetaPrecioConCantidad(f)}</span>
+        <span class="tag ${c.cls}">${etiquetaAcampada(f.acampada)}</span>
+      </div>
+      ${htmlEnlaces(f, c)}
+    </div>
+  `;
+}
+
+// Vista 2: Mosaico tipo Pinterest
+function tarjetaVistaMosaico(f, c){
+  const contenidoImagen = c.cartelSano
+    ? `<img src="${escapeHtml(c.cartelSano)}" alt="Cartel" loading="lazy" onerror="this.parentElement.classList.add('mosaico-fallback');this.remove()">`
+    : '';
+  return `
+    <div class="tarjeta tarjeta--mosaico ${c.cartelSano?'':'mosaico-fallback'}" style="${c.cartelSano?'':'background:'+c.colorLateral}" data-id="${escapeHtml(f.id)}">
+      <span class="mosaico-dot" style="background:${c.colorLateral}" title="${c.etq}"></span>
+      ${contenidoImagen}
+      <div class="mosaico-overlay">
+        <div class="mosaico-nombre">${escapeHtml(f.nombre)}</div>
+        <div class="mosaico-fecha">${escapeHtml(f.localidad)} · ${c.fechas}</div>
+      </div>
+    </div>
+  `;
+}
+
+// Vista "Carteles" (cartel a todo lo ancho, info colapsada, sin tarjeta/huecos)
+const PALETA_PERFIL_CARTELES = ['#c47b4a','#3a9b6e','#4a7fc4','#c44a91','#e0a93a','#7a4ac4','#4ac4b0','#c4544a'];
+function colorPerfilAleatorio(id){
+  let hash = 0;
+  const s = String(id);
+  for (let i=0; i<s.length; i++){ hash = (hash*31 + s.charCodeAt(i)) >>> 0; }
+  return PALETA_PERFIL_CARTELES[hash % PALETA_PERFIL_CARTELES.length];
+}
+function tarjetaVistaInstagram(f, c){
+  const colorPerfil = colorPerfilAleatorio(f.id);
+  const contenidoImagen = c.cartelSano
+    ? `<img src="${escapeHtml(c.cartelSano)}" alt="Cartel" loading="lazy" onerror="this.parentElement.classList.add('ig-fallback');this.remove()">`
+    : `<div class="ig-fallback-texto">${escapeHtml(f.nombre)}</div>`;
+  return `
+    <div class="tarjeta tarjeta--instagram" style="border-color:${colorPerfil}" data-id="${escapeHtml(f.id)}">
+      <div class="ig-imagen-wrap ${c.cartelSano?'':'ig-fallback'}" style="${c.cartelSano?'':'background:'+c.col}">
+        <span class="ig-dot" style="background:${c.col}" title="${c.etq}"></span>
+        ${contenidoImagen}
+      </div>
+      <div class="ig-caption">
+        <span class="ig-caption-nombre">${escapeHtml(f.nombre)}</span>
+        <span class="ig-caption-resto"> · ${escapeHtml(f.localidad)} · ${c.fechas}</span>
+      </div>
+    </div>
+  `;
+}
+
+// Vista 3: Fila (fecha a la izquierda, cartel a la derecha)
+function tarjetaVistaFila(f, c){
+  const cartelHtml = c.cartelSano
+    ? `<img class="fila-cartel" src="${escapeHtml(c.cartelSano)}" alt="Cartel" onerror="this.parentElement.classList.add('fila-cartel-vacio');this.remove()">`
+    : '';
+  return `
+    <div class="tarjeta tarjeta--fila" data-id="${escapeHtml(f.id)}">
+      <div class="fila-ticket" style="background:${c.colorLateral}">
+        <div class="ticket-dia">${c.diaTicket}</div>
+        <div class="ticket-mes">${c.mesTicket}</div>
+      </div>
+      <div class="fila-detalles">
+        <div class="nombre">${escapeHtml(f.nombre)}</div>
+        <div class="lugar">${escapeHtml(f.localidad)} · ${escapeHtml(f.ccaa)}</div>
+        <div class="tags">
+          <span class="tag">${escapeHtml(f.estilo)}</span>
+          <span class="tag ${c.cls}">${etiquetaPrecioConCantidad(f)}</span>
+        </div>
+      </div>
+      <div class="fila-cartel-wrap ${c.cartelSano?'':'fila-cartel-vacio'}" style="${c.cartelSano?'':'background:'+c.col}">${cartelHtml}</div>
+    </div>
+  `;
+}
+
+// Vista 4: Densa (una línea por festival)
+function tarjetaVistaDensa(f, c){
+  return `
+    <div class="tarjeta tarjeta--densa" data-id="${escapeHtml(f.id)}">
+      <span class="densa-dot" style="background:${c.colorLateral}" title="${c.etq}"></span>
+      <span class="densa-nombre">${escapeHtml(f.nombre)}</span>
+      <span class="densa-lugar">${escapeHtml(f.localidad)}</span>
+      <span class="densa-fecha">${c.fechas}</span>
+    </div>
+  `;
+}
+
+const CLASES_CONTENEDOR = {
+  tarjetas: 'grid',
+  mosaico: 'grid-mosaico',
+  carteles: 'feed-instagram',
+  fila: 'lista-fila',
+  densa: 'lista-densa'
+};
+const CONSTRUCTORES_TARJETA = {
+  tarjetas: tarjetaVistaTarjetas,
+  mosaico: tarjetaVistaMosaico,
+  carteles: tarjetaVistaInstagram,
+  fila: tarjetaVistaFila,
+  densa: tarjetaVistaDensa
+};
+
+function renderizarTarjetas(lista) {
+  contador.textContent = lista.length;
+
+  if (lista.length===0) {
+    contenedor.className = CLASES_CONTENEDOR[vistaActual] || 'grid';
+    contenedor.innerHTML = '<div class="empty-msg">No hay festivales visibles en el mapa.</div>';
+    actualizarFabVisibilidad();
+    return;
+  }
+
+  const construir = CONSTRUCTORES_TARJETA[vistaActual] || tarjetaVistaTarjetas;
+  contenedor.className = CLASES_CONTENEDOR[vistaActual] || 'grid';
+
+  let html = '';
+  lista.forEach(f=>{
+    const c = datosComunesTarjeta(f);
+    html += construir(f, c);
+  });
+  contenedor.innerHTML = html;
+
+  document.querySelectorAll('.tarjeta').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(e.target.tagName==='A' || e.target.closest('a')) return;
+      const id = el.dataset.id;
+      const f = lista.find(d=>String(d.id)===String(id));
+      if(f) abrirModal(f);
+    });
+  });
+  actualizarFabVisibilidad();
+}
+
+// ============================================================
+// FILTRADO PRINCIPAL
+// ============================================================
+function aplicarFiltros() {
+  const ccaa = filtroCCAAActual;
+  const estilo = filtroEstiloActual;
+  const mes = filtroMesActual;
+  const precio = filtroPrecioActual;
+  const acampada = filtroAcampadaActual;
+  const soloProx = document.getElementById('soloProximos').checked;
+  const orden = ordenActual;
+
+  let filtrados = festivales.filter(f=>{
+    if (ccaa && f.ccaa !== ccaa) return false;
+    if (estilo && f.estilo !== estilo) return false;
+    if (mes !== '' && parseDate(f.inicio).getMonth() !== parseInt(mes)) return false;
+    if (precio && f.precio !== precio) return false;
+    if (acampada && f.acampada !== acampada) return false;
+    if (soloProx && estado(f) === 'pasado') return false;
+    return true;
+  });
+
+  switch(orden){
+    case 'fecha': filtrados.sort((a,b)=>parseDate(a.inicio)-parseDate(b.inicio)); break;
+    case 'fecha-lejos': filtrados.sort((a,b)=>parseDate(b.inicio)-parseDate(a.inicio)); break;
+    case 'nombre': filtrados.sort((a,b)=>a.nombre.localeCompare(b.nombre)); break;
+    case 'ccaa': filtrados.sort((a,b)=>a.ccaa.localeCompare(b.ccaa)); break;
+  }
+
+  festivalesFiltrados = filtrados;
+  actualizarMapa(festivalesFiltrados);
+  if (typeof renderizarCalendario === 'function') renderizarCalendario();
+  actualizarTarjetas();
+}
+
+// ============================================================
+// CARGA DE DATOS DESDE SUPABASE
+// ============================================================
+async function cargarDatos() {
+  try {
+    const datos = await supabase.getAll();
+    festivales = datos;
+    poblarSelectores(festivales);
+    aplicarFiltros();
+  } catch(e) {
+    console.error('Error al cargar datos:', e);
+    document.getElementById('formMsg').className='form-msg err';
+    document.getElementById('formMsg').textContent='Error al conectar con Supabase. Comprueba las credenciales.';
+  }
+}
+
+// ============================================================
+// POBLAR SELECTORES
+// ============================================================
+function poblarMenuFiltro(menuId, valores, valorActual){
+  const menu = document.getElementById(menuId);
+  const etiquetaDefecto = menu.dataset.etiqueta;
+  let html = `<button type="button" class="vista-opcion${valorActual===''?' activa':''}" data-value="">${escapeHtml(etiquetaDefecto)}</button>`;
+  valores.forEach(v=>{
+    html += `<button type="button" class="vista-opcion${valorActual===v?' activa':''}" data-value="${escapeHtml(v)}">${escapeHtml(v)}</button>`;
+  });
+  menu.innerHTML = html;
+}
+
+// Como poblarMenuFiltro, pero para CCAA: agrupa primero las comunidades autónomas
+// y, si hay valores fuera de esa lista (países), los separa debajo con un divisor.
+function poblarMenuFiltroCCAA(valores, valorActual){
+  const menu = document.getElementById('menuFiltroCCAA');
+  const etiquetaDefecto = menu.dataset.etiqueta;
+  const oficiales = valores.filter(v => CCAA_LIST.includes(v)).sort();
+  const internacionales = valores.filter(v => !CCAA_LIST.includes(v)).sort();
+
+  let html = `<button type="button" class="vista-opcion${valorActual===''?' activa':''}" data-value="">${escapeHtml(etiquetaDefecto)}</button>`;
+  oficiales.forEach(v=>{
+    html += `<button type="button" class="vista-opcion${valorActual===v?' activa':''}" data-value="${escapeHtml(v)}">${escapeHtml(v)}</button>`;
+  });
+  if (internacionales.length){
+    html += `<div class="vista-opcion-separador">------ Internacional ------</div>`;
+    internacionales.forEach(v=>{
+      html += `<button type="button" class="vista-opcion${valorActual===v?' activa':''}" data-value="${escapeHtml(v)}">${escapeHtml(v)}</button>`;
+    });
+  }
+  menu.innerHTML = html;
+}
+
+function poblarSelectores(lista){
+  poblarMenuFiltroCCAA([...new Set(lista.map(f=>f.ccaa))], filtroCCAAActual);
+  poblarMenuFiltro('menuFiltroEstilo', [...new Set(lista.map(f=>f.estilo))].sort(), filtroEstiloActual);
+  actualizarEtiquetaFiltroChip('btnFiltroCCAA', 'menuFiltroCCAA');
+  actualizarEtiquetaFiltroChip('btnFiltroEstilo', 'menuFiltroEstilo');
+
+  // Sugerencias del campo CCAA/país: la lista fija + lo que ya se haya usado en los datos
+  const todasCCAA = new Set(CCAA_LIST);
+  lista.forEach(f=>{ if (f.ccaa) todasCCAA.add(f.ccaa); });
+  document.getElementById('listaCCAA').innerHTML = [...todasCCAA].sort().map(c=>`<option value="${escapeHtml(c)}">`).join('');
+}
+
+// ============================================================
+// AÑADIR FESTIVAL
+// ============================================================
+const formMsg = document.getElementById('formMsg');
+document.getElementById('btnAdd').addEventListener('click', async ()=>{
+  const nombre = document.getElementById('inNombre').value.trim();
+  const ccaa = document.getElementById('inCCAA').value;
+  const localidad = document.getElementById('inLocalidad').value.trim() || ccaa;
+  const estilo = document.getElementById('inEstilo').value.trim() || 'Varios';
+  const inicio = document.getElementById('inInicio').value;
+  const fin = document.getElementById('inFin').value || inicio;
+  const coords = parseCoords(document.getElementById('inCoords').value);
+  const lat = coords ? coords.lat : NaN;
+  const lng = coords ? coords.lng : NaN;
+  const precio = document.getElementById('inPrecio').value;
+  const cantidadRaw = document.getElementById('inCantidad').value;
+  const precio_cantidad = (precio==='pago'||precio==='pago_solidario') && cantidadRaw !== '' ? parseFloat(cantidadRaw) : null;
+  const acampada = document.getElementById('inAcampada').value;
+  const web = document.getElementById('inWeb').value.trim();
+  const cartel = document.getElementById('inCartel').value.trim();
+
+  if (!nombre || !ccaa || !inicio || isNaN(lat) || isNaN(lng)){
+    formMsg.className='form-msg err';
+    formMsg.textContent='Faltan campos: nombre, CCAA, fecha inicio y coordenadas (formato lat,lng).';
+    return;
+  }
+
+  const nuevo = { id:'user-'+Date.now(), nombre, ccaa, estilo, localidad, lat, lng, inicio, fin, precio, precio_cantidad, acampada, web, cartel };
+  try {
+    await supabase.insert(nuevo);
+    formMsg.className='form-msg ok';
+    formMsg.textContent=`"${nombre}" añadido.`;
+    document.querySelectorAll('#addSection input, #addSection select').forEach(el=>el.value='');
+    document.getElementById('inCantidadWrap').style.display = 'none';
+    btnOpenMapa.disabled = true;
+    await cargarDatos();
+
+    // Colapsar el formulario y desplazarse hasta la tarjeta recién creada
+    document.getElementById('addSection').classList.remove('open');
+    document.getElementById('toggleAdd').classList.remove('open');
+    setTimeout(()=>{
+      const tarjetaNueva = document.querySelector('.tarjeta[data-id="'+CSS.escape(nuevo.id)+'"]');
+      if (tarjetaNueva) {
+        tarjetaNueva.scrollIntoView({ behavior:'smooth', block:'center' });
+        tarjetaNueva.classList.add('tarjeta-nueva');
+        setTimeout(()=>tarjetaNueva.classList.remove('tarjeta-nueva'), 2200);
+      }
+    }, 350);
+  } catch(e) {
+    formMsg.className='form-msg err';
+    formMsg.textContent='Error al añadir: '+e.message;
+  }
+});
+
+// ============================================================
+// FILTROS (eventos)
+// ============================================================
+document.getElementById('toggleFiltros').addEventListener('click', function(){
+  const panel = document.getElementById('filtrosPanel');
+  const open = panel.classList.toggle('open');
+  this.classList.toggle('open', open);
+});
+
+// ============================================================
+// MENÚ "VISTA"
+// ============================================================
+const toggleVista = document.getElementById('toggleVista');
+const vistaMenu = document.getElementById('vistaMenu');
+
+function marcarVistaActiva(){
+  document.querySelectorAll('.vista-opcion').forEach(btn=>{
+    btn.classList.toggle('activa', btn.dataset.vista === vistaActual);
+  });
+}
+marcarVistaActiva();
+
+// Cierra cualquier menú desplegable abierto (Vista, Ordenar, filtros...) salvo el indicado
+function cerrarTodosLosMenusDesplegables(exceptoMenu){
+  document.querySelectorAll('.vista-menu.open').forEach(m=>{
+    if (m !== exceptoMenu) {
+      m.classList.remove('open');
+      const btn = m.previousElementSibling;
+      if (btn && btn.classList.contains('filtro-chip')) btn.classList.remove('abierto');
+    }
+  });
+}
+
+function actualizarEtiquetaFiltroChip(btnId, menuId){
+  const btn = document.getElementById(btnId);
+  const menu = document.getElementById(menuId);
+  const activa = menu.querySelector('.vista-opcion.activa');
+  const label = btn.querySelector('.filtro-chip-label');
+  label.textContent = activa ? activa.textContent : menu.dataset.etiqueta;
+  btn.classList.toggle('activo', !!(activa && activa.dataset.value !== ''));
+}
+
+// Conecta un chip de filtro con su menú desplegable
+function configurarFiltroDropdown(btnId, menuId, onCambiar){
+  const btn = document.getElementById(btnId);
+  const menu = document.getElementById(menuId);
+
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const vaAAbrir = !menu.classList.contains('open');
+    cerrarTodosLosMenusDesplegables(vaAAbrir ? menu : null);
+    menu.classList.toggle('open', vaAAbrir);
+    btn.classList.toggle('abierto', vaAAbrir);
+  });
+
+  menu.addEventListener('click', (e)=>{
+    const op = e.target.closest('.vista-opcion');
+    if (!op) return;
+    menu.querySelectorAll('.vista-opcion').forEach(o=>o.classList.toggle('activa', o===op));
+    menu.classList.remove('open');
+    btn.classList.remove('abierto');
+    actualizarEtiquetaFiltroChip(btnId, menuId);
+    onCambiar(op.dataset.value);
+    aplicarFiltros();
+  });
+}
+
+configurarFiltroDropdown('btnFiltroCCAA', 'menuFiltroCCAA', v=> filtroCCAAActual = v);
+configurarFiltroDropdown('btnFiltroEstilo', 'menuFiltroEstilo', v=> filtroEstiloActual = v);
+configurarFiltroDropdown('btnFiltroMes', 'menuFiltroMes', v=> filtroMesActual = v);
+configurarFiltroDropdown('btnFiltroPrecio', 'menuFiltroPrecio', v=> filtroPrecioActual = v);
+configurarFiltroDropdown('btnFiltroAcampada', 'menuFiltroAcampada', v=> filtroAcampadaActual = v);
+
+toggleVista.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  cerrarTodosLosMenusDesplegables(vistaMenu);
+  vistaMenu.classList.toggle('open');
+});
+
+vistaMenu.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.vista-opcion');
+  if (!btn) return;
+  vistaActual = btn.dataset.vista;
+  saveVista(vistaActual);
+  marcarVistaActiva();
+  vistaMenu.classList.remove('open');
+  actualizarTarjetas();
+});
+
+document.getElementById('toggleAdd').addEventListener('click', function(){
+  const section = document.getElementById('addSection');
+  const open = section.classList.toggle('open');
+  this.classList.toggle('open', open);
+});
+
+// ============================================================
+// BÚSQUEDA GLOBAL (todos los festivales, con lista y salto en el mapa)
+// ============================================================
+const buscarInput = document.getElementById('buscar');
+const buscarResultados = document.getElementById('buscarResultados');
+
+function renderResultadosBusqueda(query){
+  const q = query.trim().toLowerCase();
+  if (!q) {
+    buscarResultados.innerHTML = '';
+    buscarResultados.classList.remove('open');
+    return;
+  }
+  const coincidencias = festivales.filter(f=>
+    (f.nombre && f.nombre.toLowerCase().includes(q)) ||
+    (f.localidad && f.localidad.toLowerCase().includes(q))
+  ).slice(0, 8);
+
+  if (coincidencias.length === 0) {
+    buscarResultados.innerHTML = `
+      <div class="vacio">Sin resultados</div>
+      ${getPerplexityKey() ? '<button type="button" class="buscar-ia-btn" id="btnBuscarConIA">Buscar 🤖</button>' : ''}
+    `;
+  } else {
+    buscarResultados.innerHTML = coincidencias.map(f => `
+      <div class="item" data-id="${escapeHtml(f.id)}">
+        <div class="n">${escapeHtml(f.nombre)}</div>
+        <div class="l">${escapeHtml(f.localidad)} · ${fmtFecha(f.inicio)}</div>
+      </div>
+    `).join('');
+  }
+  buscarResultados.classList.add('open');
+}
+
+function seleccionarResultadoBusqueda(id){
+  const f = festivales.find(x => String(x.id) === String(id));
+  if (!f) return;
+  buscarResultados.classList.remove('open');
+  buscarInput.value = '';
+  irAFestivalEnMapa(f);
+}
+
+buscarInput.addEventListener('input', ()=> renderResultadosBusqueda(buscarInput.value));
+buscarInput.addEventListener('focus', ()=> { if (buscarInput.value.trim()) renderResultadosBusqueda(buscarInput.value); });
+buscarResultados.addEventListener('click', (e)=>{
+  const item = e.target.closest('.item');
+  if (item) { seleccionarResultadoBusqueda(item.dataset.id); return; }
+  if (e.target.closest('#btnBuscarConIA')) {
+    const query = buscarInput.value.trim();
+    buscarInput.value = '';
+    abrirAsistenteConBusqueda(query);
+  }
+});
+document.addEventListener('click', (e)=>{
+  if (!e.target.closest('.buscar-wrapper')) buscarResultados.classList.remove('open');
+});
+buscarInput.addEventListener('keydown', (e)=>{
+  if (e.key === 'Enter') {
+    const primero = buscarResultados.querySelector('.item');
+    if (primero) seleccionarResultadoBusqueda(primero.dataset.id);
+  } else if (e.key === 'Escape') {
+    buscarResultados.classList.remove('open');
+  }
+});
+
+// Abre el modal del asistente IA con la búsqueda ya lanzada y los datos extraídos
+function abrirAsistenteConBusqueda(query){
+  buscarResultados.classList.remove('open');
+  if (avisarSiFaltaClavePerplexity()) return;
+  document.getElementById('btnAsistenteIA').click();
+  assistantQuery.value = query;
+  btnAnalyze.click();
+}
+
+document.getElementById('soloProximos').addEventListener('change', aplicarFiltros);
+// ============================================================
+// MENÚ "ORDENAR"
+// ============================================================
+const toggleOrden = document.getElementById('toggleOrden');
+const ordenMenu = document.getElementById('ordenMenu');
+
+function marcarOrdenActivo(){
+  document.querySelectorAll('#ordenMenu .vista-opcion').forEach(btn=>{
+    btn.classList.toggle('activa', btn.dataset.orden === ordenActual);
+  });
+}
+marcarOrdenActivo();
+
+toggleOrden.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  cerrarTodosLosMenusDesplegables(ordenMenu);
+  ordenMenu.classList.toggle('open');
+});
+
+ordenMenu.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.vista-opcion');
+  if (!btn) return;
+  ordenActual = btn.dataset.orden;
+  marcarOrdenActivo();
+  ordenMenu.classList.remove('open');
+  aplicarFiltros();
+});
+
+document.addEventListener('click', (e)=>{
+  if (!e.target.closest('.vista-wrapper')) {
+    cerrarTodosLosMenusDesplegables(null);
+  }
+});
+
+document.getElementById('resetFiltros').addEventListener('click', ()=>{
+  document.getElementById('buscar').value='';
+  filtroCCAAActual='';
+  filtroEstiloActual='';
+  filtroMesActual='';
+  filtroPrecioActual='';
+  filtroAcampadaActual='';
+  document.querySelectorAll('#menuFiltroCCAA .vista-opcion, #menuFiltroEstilo .vista-opcion, #menuFiltroMes .vista-opcion, #menuFiltroPrecio .vista-opcion, #menuFiltroAcampada .vista-opcion').forEach(o=>{
+    o.classList.toggle('activa', o.dataset.value === '');
+  });
+  actualizarEtiquetaFiltroChip('btnFiltroCCAA', 'menuFiltroCCAA');
+  actualizarEtiquetaFiltroChip('btnFiltroEstilo', 'menuFiltroEstilo');
+  actualizarEtiquetaFiltroChip('btnFiltroMes', 'menuFiltroMes');
+  actualizarEtiquetaFiltroChip('btnFiltroPrecio', 'menuFiltroPrecio');
+  actualizarEtiquetaFiltroChip('btnFiltroAcampada', 'menuFiltroAcampada');
+  document.getElementById('soloProximos').checked=true;
+  ordenActual='fecha';
+  marcarOrdenActivo();
+  aplicarFiltros();
+});
+
+// ============================================================
+// BOTÓN ABRIR WEB
+// ============================================================
+const btnOpenWeb = document.getElementById('btnOpenWeb');
+const inWeb = document.getElementById('inWeb');
+
+inWeb.addEventListener('input', ()=>{
+  const url = inWeb.value.trim();
+  if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+    btnOpenWeb.disabled = false;
+  } else {
+    btnOpenWeb.disabled = true;
+  }
+});
+
+btnOpenWeb.addEventListener('click', ()=>{
+  const url = inWeb.value.trim();
+  if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+    window.open(url, '_blank');
+  }
+});
+
+// ============================================================
+// BOTÓN "MAPA" JUNTO A LOCALIDAD
+// ============================================================
+const btnOpenMapa = document.getElementById('btnOpenMapa');
+const inLocalidad = document.getElementById('inLocalidad');
+
+inLocalidad.addEventListener('input', ()=>{
+  btnOpenMapa.disabled = !inLocalidad.value.trim();
+});
+
+btnOpenMapa.addEventListener('click', ()=>{
+  const q = inLocalidad.value.trim();
+  if (q) {
+    window.open('https://www.google.com/maps/search/' + encodeURIComponent(q), '_blank');
+  }
+});
+
+// Mostrar/ocultar el campo "Cantidad" según si la entrada es de pago
+document.getElementById('inPrecio').addEventListener('change', function(){
+  document.getElementById('inCantidadWrap').style.display = (this.value==='pago'||this.value==='pago_solidario') ? '' : 'none';
+});
+
+// ============================================================
+// CONFIGURACIÓN (menú)
+// ============================================================
+const configBtn = document.getElementById('configBtn');
+const configMenu = document.getElementById('configMenu');
+
+configBtn.addEventListener('click', (e)=>{ e.stopPropagation(); configMenu.classList.toggle('open'); });
+document.addEventListener('click', ()=>{ configMenu.classList.remove('open'); });
+
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  localStorage.setItem(THEME_KEY, document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+document.getElementById('btnToggleTema').addEventListener('click', ()=>{ toggleTheme(); configMenu.classList.remove('open'); });
+
+// ============================================================
+// CONFIGURAR SUPABASE (guardado solo en este dispositivo, precargado con lo actual)
+// ============================================================
+const supabaseModalOverlay = document.getElementById('supabaseModalOverlay');
+const inputSupabaseUrl = document.getElementById('inputSupabaseUrl');
+const inputSupabaseKey = document.getElementById('inputSupabaseKey');
+const supabaseConfigEstado = document.getElementById('supabaseConfigEstado');
+
+function abrirModalSupabaseConfig(){
+  configMenu.classList.remove('open');
+  inputSupabaseUrl.value = getSupabaseUrl();
+  inputSupabaseKey.value = getSupabaseKey();
+  supabaseConfigEstado.textContent = '';
+  supabaseModalOverlay.classList.add('open');
+}
+document.getElementById('btnConfigSupabase').addEventListener('click', abrirModalSupabaseConfig);
+document.getElementById('supabaseModalCerrar').addEventListener('click', ()=> supabaseModalOverlay.classList.remove('open'));
+supabaseModalOverlay.addEventListener('click', (e)=>{ if (e.target===supabaseModalOverlay) supabaseModalOverlay.classList.remove('open'); });
+
+document.getElementById('btnGuardarSupabaseConfig').addEventListener('click', ()=>{
+  const url = inputSupabaseUrl.value.trim().replace(/\/+$/,'');
+  const key = inputSupabaseKey.value.trim();
+  if (!url || !key) {
+    supabaseConfigEstado.style.color = '#b23a2e';
+    supabaseConfigEstado.textContent = '⚠️ Rellena tanto la URL como la clave.';
+    return;
+  }
+  saveSupabaseConfig(url, key);
+  supabaseConfigEstado.style.color = '#1e5a3e';
+  supabaseConfigEstado.textContent = '✅ Guardado. Recargando festivales…';
+  cargarDatos();
+});
+document.getElementById('btnRestaurarSupabaseConfig').addEventListener('click', ()=>{
+  if (!confirm('¿Restaurar la configuración de Supabase por defecto?')) return;
+  restaurarSupabaseConfigDefecto();
+  inputSupabaseUrl.value = getSupabaseUrl();
+  inputSupabaseKey.value = getSupabaseKey();
+  supabaseConfigEstado.style.color = '#3d5248';
+  supabaseConfigEstado.textContent = '🔄 Restaurado. Recargando festivales…';
+  cargarDatos();
+});
+
+// ============================================================
+// CONFIGURAR CLAVE DE YOUTUBE (guardada solo en este dispositivo, precargada)
+// ============================================================
+const youtubeModalOverlay = document.getElementById('youtubeModalOverlay');
+const inputYoutubeKey = document.getElementById('inputYoutubeKey');
+const youtubeConfigEstado = document.getElementById('youtubeConfigEstado');
+
+function abrirModalYoutubeConfig(){
+  configMenu.classList.remove('open');
+  inputYoutubeKey.value = getYoutubeKey();
+  youtubeConfigEstado.textContent = '';
+  youtubeModalOverlay.classList.add('open');
+}
+document.getElementById('btnConfigYoutube').addEventListener('click', abrirModalYoutubeConfig);
+document.getElementById('youtubeModalCerrar').addEventListener('click', ()=> youtubeModalOverlay.classList.remove('open'));
+youtubeModalOverlay.addEventListener('click', (e)=>{ if (e.target===youtubeModalOverlay) youtubeModalOverlay.classList.remove('open'); });
+
+document.getElementById('btnGuardarYoutubeKey').addEventListener('click', ()=>{
+  const key = inputYoutubeKey.value.trim();
+  if (!key) {
+    youtubeConfigEstado.style.color = '#b23a2e';
+    youtubeConfigEstado.textContent = '⚠️ Rellena la clave.';
+    return;
+  }
+  saveYoutubeKey(key);
+  youtubeConfigEstado.style.color = '#1e5a3e';
+  youtubeConfigEstado.textContent = '✅ Guardado.';
+});
+document.getElementById('btnRestaurarYoutubeKey').addEventListener('click', ()=>{
+  if (!confirm('¿Restaurar la clave de YouTube por defecto?')) return;
+  restaurarYoutubeKeyDefecto();
+  inputYoutubeKey.value = getYoutubeKey();
+  youtubeConfigEstado.style.color = '#3d5248';
+  youtubeConfigEstado.textContent = '🔄 Restaurado.';
+});
+
+// ============================================================
+// CONFIGURAR CLAVE DE PERPLEXITY (guardada solo en este dispositivo)
+// ============================================================
+const perplexityModalOverlay = document.getElementById('perplexityModalOverlay');
+const inputPerplexityKey = document.getElementById('inputPerplexityKey');
+const perplexityKeyEstado = document.getElementById('perplexityKeyEstado');
+
+function abrirModalPerplexityConfig(seccionAAbrir){
+  configMenu.classList.remove('open');
+  inputPerplexityKey.value = getPerplexityKey();
+  perplexityKeyEstado.textContent = getPerplexityKey() ? '✅ Ya tienes una clave guardada en este dispositivo.' : '';
+  perplexityKeyEstado.style.color = '#1e5a3e';
+
+  // Todas las secciones colapsadas por defecto, salvo la que se pida abrir explícitamente
+  document.querySelectorAll('.perplexity-seccion-toggle').forEach(btn=>{
+    const abrir = btn.dataset.seccion === seccionAAbrir;
+    btn.classList.toggle('abierta', abrir);
+    document.getElementById(btn.dataset.seccion).style.display = abrir ? 'block' : 'none';
+  });
+
+  perplexityModalOverlay.classList.add('open');
+}
+document.getElementById('btnConfigPerplexity').addEventListener('click', ()=> abrirModalPerplexityConfig());
+document.getElementById('perplexityModalCerrar').addEventListener('click', ()=> perplexityModalOverlay.classList.remove('open'));
+perplexityModalOverlay.addEventListener('click', (e)=>{ if (e.target===perplexityModalOverlay) perplexityModalOverlay.classList.remove('open'); });
+
+document.querySelectorAll('.perplexity-seccion-toggle').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const seccion = document.getElementById(btn.dataset.seccion);
+    const abrir = seccion.style.display === 'none';
+    seccion.style.display = abrir ? 'block' : 'none';
+    btn.classList.toggle('abierta', abrir);
+  });
+});
+
+// Muestra u oculta todo lo relacionado con el Asistente IA según si hay clave guardada
+function actualizarVisibilidadAsistenteIA(){
+  const hayClave = !!getPerplexityKey();
+  document.getElementById('btnAsistenteIA').style.display = hayClave ? '' : 'none';
+}
+
+document.getElementById('btnGuardarPerplexityKey').addEventListener('click', ()=>{
+  const valor = inputPerplexityKey.value.trim();
+  if (!valor) {
+    perplexityKeyEstado.style.color = '#a33';
+    perplexityKeyEstado.textContent = 'Escribe una clave antes de guardar.';
+    return;
+  }
+  savePerplexityKey(valor);
+  perplexityKeyEstado.style.color = '#1e5a3e';
+  perplexityKeyEstado.textContent = '✅ Clave guardada en este dispositivo.';
+  actualizarVisibilidadAsistenteIA();
+});
+document.getElementById('btnBorrarPerplexityKey').addEventListener('click', ()=>{
+  borrarPerplexityKey();
+  inputPerplexityKey.value = '';
+  perplexityKeyEstado.style.color = '#3d5248';
+  perplexityKeyEstado.textContent = 'Clave eliminada de este dispositivo.';
+  actualizarVisibilidadAsistenteIA();
+});
+
+// Avisa (y abre la configuración) si aún no hay clave guardada. Devuelve true si ha avisado.
+function avisarSiFaltaClavePerplexity(){
+  if (!getPerplexityKey()) {
+    alert('Necesitas configurar tu clave de Perplexity antes de usar el Asistente IA.\n\nTe abro la pantalla de configuración, con una guía paso a paso para conseguirla.');
+    abrirModalPerplexityConfig('seccionClave');
+    return true;
+  }
+  return false;
+}
+
+document.getElementById('btnRestaurarConfigPerplexity').addEventListener('click', ()=>{
+  if (!confirm('¿Restaurar los prompts y ajustes a sus valores predeterminados? Tu clave de Perplexity NO se verá afectada.')) return;
+  localStorage.removeItem(PROMPT_ASISTENTE_KEY);
+  localStorage.removeItem(PROMPT_RESUMEN_KEY);
+  document.getElementById('restaurarPromptsEstado').textContent = '🔄 Prompts y ajustes restaurados a los valores predeterminados.';
+});
+
+// ============================================================
+// EDITOR DE PROMPTS (asistente / resumen)
+// ============================================================
+const promptModalOverlay = document.getElementById('promptModalOverlay');
+const promptModalTitulo = document.getElementById('promptModalTitulo');
+const promptModalAyuda = document.getElementById('promptModalAyuda');
+const promptModalTexto = document.getElementById('promptModalTexto');
+const promptModalTemp = document.getElementById('promptModalTemp');
+const promptModalTokens = document.getElementById('promptModalTokens');
+const promptModalMensaje = document.getElementById('promptModalMensaje');
+let promptModalTipo = 'asistente';
+
+function abrirModalPrompt(tipo){
+  promptModalTipo = tipo;
+  const config = getPerplexityConfig();
+  const datos = tipo === 'asistente' ? config.asistente : config.resumen;
+
+  promptModalTitulo.textContent = tipo === 'asistente' ? '📝 Prompt del Asistente' : '📝 Prompt del Resumen';
+  promptModalAyuda.textContent = tipo === 'asistente'
+    ? 'Usa {textoBase} donde quieras que se inserte la instrucción de búsqueda (texto/URL/imagen).'
+    : 'Usa {nombre} y {ubicacion} donde quieras que se inserte el nombre del festival y su localidad.';
+  promptModalTexto.value = datos.prompt;
+  promptModalTemp.value = datos.temperature;
+  promptModalTokens.value = datos.maxTokens;
+  promptModalMensaje.textContent = '';
+  promptModalOverlay.classList.add('open');
+}
+document.getElementById('btnEditarPromptAsistente').addEventListener('click', ()=> abrirModalPrompt('asistente'));
+document.getElementById('btnEditarPromptResumen').addEventListener('click', ()=> abrirModalPrompt('resumen'));
+document.getElementById('promptModalCerrar').addEventListener('click', ()=> promptModalOverlay.classList.remove('open'));
+promptModalOverlay.addEventListener('click', (e)=>{ if (e.target===promptModalOverlay) promptModalOverlay.classList.remove('open'); });
+
+document.getElementById('btnGuardarPrompt').addEventListener('click', ()=>{
+  const texto = promptModalTexto.value.trim();
+  const temp = parseFloat(promptModalTemp.value);
+  const tokens = parseInt(promptModalTokens.value, 10);
+
+  if (!texto) {
+    promptModalMensaje.style.color = '#b23a2e';
+    promptModalMensaje.textContent = '⚠️ El prompt no puede estar vacío.';
+    return;
+  }
+  if (isNaN(temp) || temp < 0 || temp > 1) {
+    promptModalMensaje.style.color = '#b23a2e';
+    promptModalMensaje.textContent = '⚠️ La temperatura debe ser un número entre 0.0 y 1.0.';
+    return;
+  }
+  if (isNaN(tokens) || tokens < 50 || tokens > 2000) {
+    promptModalMensaje.style.color = '#b23a2e';
+    promptModalMensaje.textContent = '⚠️ Max tokens debe ser un número entre 50 y 2000.';
+    return;
+  }
+
+  const key = promptModalTipo === 'asistente' ? PROMPT_ASISTENTE_KEY : PROMPT_RESUMEN_KEY;
+  localStorage.setItem(key, JSON.stringify({
+    prompt: texto,
+    temperature: Math.round(temp * 10) / 10,
+    maxTokens: Math.round(tokens / 50) * 50
+  }));
+
+  promptModalMensaje.style.color = '#3a9b6e';
+  promptModalMensaje.textContent = '✅ Prompt guardado correctamente.';
+  setTimeout(()=> promptModalOverlay.classList.remove('open'), 1000);
+});
+
+document.getElementById('btnRestaurarPrompt').addEventListener('click', ()=>{
+  if (!confirm('¿Restaurar este prompt a su valor predeterminado?')) return;
+  const key = promptModalTipo === 'asistente' ? PROMPT_ASISTENTE_KEY : PROMPT_RESUMEN_KEY;
+  localStorage.removeItem(key);
+  abrirModalPrompt(promptModalTipo);
+  promptModalMensaje.style.color = '#3a9b6e';
+  promptModalMensaje.textContent = '🔄 Restaurado al valor predeterminado.';
+});
+
+// ============================================================
+// ASISTENTE IA (con imágenes y scroll centrado)
+// ============================================================
+const assistantModal = document.getElementById('assistantModal');
+const assistantClose = document.getElementById('assistantClose');
+const assistantQuery = document.getElementById('assistantQuery');
+const assistantStatus = document.getElementById('assistantStatus');
+const btnAnalyze = document.getElementById('btnAnalyze');
+const btnFillForm = document.getElementById('btnFillForm');
+const assistantResult = document.getElementById('assistantResult');
+const assistantPreview = document.getElementById('assistantPreview');
+
+const assistantThumbs = document.getElementById('assistantThumbs');
+const assistantAttachBtn = document.getElementById('assistantAttachBtn');
+const assistantFileInput = document.getElementById('assistantFileInput');
+let assistantImages = [];
+let ultimosDatosExtraidos = null;
+
+// Manejo de imágenes en el asistente
+assistantAttachBtn.addEventListener('click', () => assistantFileInput.click());
+assistantFileInput.addEventListener('change', async (e) => {
+  const files = Array.from(e.target.files);
+  for (const file of files) {
+    const dataUrl = await fileToDataUrl(file);
+    const idx = assistantImages.length;
+    assistantImages.push(dataUrl);
+    renderThumb(assistantThumbs, dataUrl, idx, (i) => { assistantImages[i] = null; });
+  }
+  assistantFileInput.value = "";
+});
+
+// Abrir/cerrar modal
+document.getElementById('btnAsistenteIA').addEventListener('click', ()=>{
+  configMenu.classList.remove('open');
+  if (avisarSiFaltaClavePerplexity()) return;
+  assistantModal.classList.add('open');
+  assistantQuery.value = '';
+  assistantStatus.className = 'assistant-status';
+  assistantStatus.textContent = '';
+  assistantResult.style.display = 'none';
+  btnFillForm.disabled = true;
+  ultimosDatosExtraidos = null;
+  assistantImages = [];
+  assistantThumbs.innerHTML = '';
+});
+
+assistantClose.addEventListener('click', ()=>{ 
+  assistantModal.classList.remove('open'); 
+  assistantImages = [];
+  assistantThumbs.innerHTML = '';
+});
+assistantModal.addEventListener('click', (e)=>{ 
+  if(e.target===assistantModal) {
+    assistantModal.classList.remove('open');
+    assistantImages = [];
+    assistantThumbs.innerHTML = '';
+  }
+});
+
+function extraerJSON(texto) {
+  const textoLimpio = texto.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+  const match = textoLimpio.match(/\{[\s\S]*\}/);
+  if (match) {
+    try {
+      return JSON.parse(match[0]);
+    } catch(e) {
+      return null;
+    }
+  }
+  return null;
+}
+
+async function buscarConPerplexity(query, images = []) {
+  const config = getPerplexityConfig();
+  if (!config.key) throw new Error('CONFIG_REQUIRED');
+
+  const esUrl = query.startsWith('http://') || query.startsWith('https://');
+  const tieneImagen = images.length > 0;
+  
+  let textoBase = '';
+  if (tieneImagen) {
+    textoBase = `Analiza la imagen del cartel del festival que se te proporciona. Extrae el nombre del festival y toda la información posible. Luego, complementa con búsqueda en internet si es necesario.`;
+  } else {
+    textoBase = esUrl 
+      ? `Analiza esta página web de un festival: ${query}. Extrae la información en formato JSON.` 
+      : `Busca en internet información sobre el festival "${query}" y extrae sus datos en formato JSON.`;
+  }
+
+  const mensaje = config.asistente.prompt.replace(/\{textoBase\}/g, textoBase);
+
+  const content = [{ type: "text", text: mensaje }];
+  for (const img of images) {
+    content.push({ type: "image_url", image_url: { url: img } });
+  }
+
+  const payload = {
+    model: MODEL,
+    messages: [
+      { role: "system", content: "Eres un asistente que extrae información de festivales en formato JSON, analizando imágenes y buscando en internet." },
+      { role: "user", content: content }
+    ],
+    temperature: config.asistente.temperature,
+    max_tokens: config.asistente.maxTokens,
+    stream: false
+  };
+
+  const response = await fetch(PERPLEXITY_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${config.key}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) throw new Error('AUTH_ERROR');
+    const error = await response.text();
+    throw new Error(`Perplexity error ${response.status}: ${error}`);
+  }
+
+  const data = await response.json();
+  const message = data.choices[0].message;
+  return message.content || 'No se pudo obtener información.';
+}
+
+btnAnalyze.addEventListener('click', async ()=>{
+  if (!getPerplexityKey()) {
+    assistantStatus.className = 'assistant-status error';
+    assistantStatus.textContent = '⚠️ Falta configurar tu clave de Perplexity (⚙️ → Configurar Perplexity).';
+    return;
+  }
+  const query = assistantQuery.value.trim();
+  const images = assistantImages.filter(Boolean);
+  
+  if (!query && images.length === 0) {
+    assistantStatus.className = 'assistant-status error';
+    assistantStatus.textContent = '⚠️ Por favor, introduce el nombre del festival o sube una imagen.';
+    return;
+  }
+  
+  assistantStatus.className = 'assistant-status loading';
+  assistantStatus.textContent = '⏳ Analizando imagen y buscando información con Perplexity...';
+  btnAnalyze.disabled = true;
+  
+  try {
+    const jsonStr = await buscarConPerplexity(query, images);
+    const jsonData = extraerJSON(jsonStr);
+    
+    if (jsonData) {
+      ultimosDatosExtraidos = jsonData;
+      mostrarPreview(ultimosDatosExtraidos);
+      assistantResult.style.display = 'block';
+      btnFillForm.disabled = false;
+      assistantStatus.className = 'assistant-status success';
+      assistantStatus.textContent = '✅ Datos extraídos correctamente. Revisa el resultado y haz clic en "Rellenar formulario" si es correcto.';
+    } else {
+      assistantStatus.className = 'assistant-status error';
+      assistantStatus.textContent = '⚠️ No se pudo extraer información estructurada. Intenta con otro nombre o URL.';
+      console.log('Respuesta sin JSON:', jsonStr);
+    }
+    
+  } catch(e) {
+    assistantStatus.className = 'assistant-status error';
+    if (e.message === 'CONFIG_REQUIRED') {
+      assistantStatus.textContent = '⚠️ Falta configurar tu clave de Perplexity.';
+      abrirModalPerplexityConfig('seccionClave');
+    } else if (e.message === 'AUTH_ERROR') {
+      assistantStatus.textContent = '❌ Tu clave de Perplexity no es válida. Revísala en Ajustes.';
+      abrirModalPerplexityConfig('seccionClave');
+    } else {
+      assistantStatus.textContent = '❌ Error al buscar: '+e.message;
+    }
+    console.error(e);
+  }
+  
+  btnAnalyze.disabled = false;
+});
+
+function mostrarPreview(datos) {
+  const campos = [
+    { label: 'Nombre', key: 'nombre' },
+    { label: 'CCAA', key: 'ccaa' },
+    { label: 'Localidad', key: 'localidad' },
+    { label: 'Estilo', key: 'estilo' },
+    { label: 'Inicio', key: 'inicio' },
+    { label: 'Fin', key: 'fin' },
+    { label: 'Precio', key: 'precio' },
+    { label: 'Cantidad (€)', key: 'precio_cantidad' },
+    { label: 'Acampada', key: 'acampada' },
+    { label: 'Web', key: 'web' },
+    { label: 'Cartel', key: 'cartel' },
+    { label: 'Latitud', key: 'lat' },
+    { label: 'Longitud', key: 'lng' }
+  ];
+  
+  let html = '';
+  campos.forEach(campo => {
+    const valor = datos[campo.key] !== undefined && datos[campo.key] !== null && datos[campo.key] !== '' ? datos[campo.key] : '—';
+    html += `<div class="field"><span class="label">${escapeHtml(campo.label)}:</span><span class="value">${escapeHtml(valor)}</span></div>`;
+  });
+  assistantPreview.innerHTML = html;
+}
+
+// ============================================================
+// BOTÓN "RELLENAR FORMULARIO" CON SCROLL CENTRADO
+// ============================================================
+btnFillForm.addEventListener('click', ()=>{
+  if (!ultimosDatosExtraidos) return;
+  
+  const d = ultimosDatosExtraidos;
+  document.getElementById('inNombre').value = d.nombre || '';
+  document.getElementById('inCCAA').value = d.ccaa || '';
+  document.getElementById('inLocalidad').value = d.localidad || '';
+  document.getElementById('inEstilo').value = d.estilo || '';
+  document.getElementById('inInicio').value = d.inicio || '';
+  document.getElementById('inFin').value = d.fin || d.inicio || '';
+  const latVal = parseFloat(d.lat);
+  const lngVal = parseFloat(d.lng);
+  const coordsValidas = !isNaN(latVal) && isFinite(latVal) && !isNaN(lngVal) && isFinite(lngVal);
+  document.getElementById('inCoords').value = coordsValidas ? `${latVal},${lngVal}` : '';
+  document.getElementById('inPrecio').value = d.precio || 'desconocido';
+  const precioVal = document.getElementById('inPrecio').value;
+  const inCantidadWrap = document.getElementById('inCantidadWrap');
+  const cantidadVal = parseFloat(d.precio_cantidad);
+  if ((precioVal==='pago'||precioVal==='pago_solidario') && !isNaN(cantidadVal) && isFinite(cantidadVal)) {
+    document.getElementById('inCantidad').value = cantidadVal;
+    inCantidadWrap.style.display = '';
+  } else {
+    document.getElementById('inCantidad').value = '';
+    inCantidadWrap.style.display = (precioVal==='pago'||precioVal==='pago_solidario') ? '' : 'none';
+  }
+  document.getElementById('inAcampada').value = d.acampada || 'desconocido';
+  document.getElementById('inWeb').value = d.web || '';
+  document.getElementById('inCartel').value = d.cartel || '';
+  
+  inWeb.dispatchEvent(new Event('input'));
+  inLocalidad.dispatchEvent(new Event('input'));
+  
+  assistantModal.classList.remove('open');
+  assistantImages = [];
+  assistantThumbs.innerHTML = '';
+  
+  const addSection = document.getElementById('addSection');
+  const yaEstabaAbierta = addSection.classList.contains('open');
+  if (!yaEstabaAbierta) {
+    addSection.classList.add('open');
+    document.getElementById('toggleAdd').classList.add('open');
+  }
+  
+  // Centrado directo al formulario, sin animación de scroll visible
+  // (esperamos a que termine la transición de apertura para calcular bien el centro)
+  setTimeout(()=>{
+    addSection.scrollIntoView({ behavior: 'auto', block: 'center' });
+  }, yaEstabaAbierta ? 0 : 350);
+  
+  document.getElementById('formMsg').className = 'form-msg ok';
+  document.getElementById('formMsg').textContent = '📝 Datos rellenados desde el asistente. Revisa y haz clic en "Añadir".';
+});
+
+// ============================================================
+// BOTÓN FLOTANTE: SUBIR ARRIBA
+// ============================================================
+const btnScrollTop = document.getElementById('btnScrollTop');
+const contenedorGrid = document.getElementById('contenedor');
+
+function actualizarFabVisibilidad(){
+  const rect = contenedorGrid.getBoundingClientRect();
+  // Solo visible mientras estamos "dentro" de la lista de tarjetas:
+  // su borde superior ya ha pasado por encima del viewport (no estamos viendo el mapa/filtros)
+  // y su borde inferior todavía no ha pasado por completo (no hemos llegado al formulario de añadir)
+  const dentroDeLaLista = rect.top < 0 && rect.bottom > 0;
+  btnScrollTop.classList.toggle('show', dentroDeLaLista);
+}
+window.addEventListener('scroll', actualizarFabVisibilidad);
+window.addEventListener('resize', actualizarFabVisibilidad);
+btnScrollTop.addEventListener('click', ()=>{
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ============================================================
+// BLOQUEAR SCROLL DEL FONDO MIENTRAS HAY UN MODAL ABIERTO
+// ============================================================
+function actualizarBloqueoScrollFondo(){
+  const hayModalAbierto = Array.from(document.querySelectorAll('.modal-overlay.open')).some(el =>
+    !(el.id === 'reproductorModalOverlay' && el.classList.contains('fp-collapsed'))
+  );
+  document.body.classList.toggle('modal-abierto', hayModalAbierto);
+}
+const observadorModales = new MutationObserver(actualizarBloqueoScrollFondo);
+document.querySelectorAll('.modal-overlay').forEach(el=>{
+  observadorModales.observe(el, { attributes:true, attributeFilter:['class'] });
+});
+actualizarBloqueoScrollFondo();
+
+// ============================================================
+// INICIO
+// ============================================================
+if(loadTheme()) document.body.classList.add('dark');
+actualizarVisibilidadAsistenteIA();
+cargarDatos();
+setTimeout(()=>map.invalidateSize(), 400);
+</script>
+</body>
+</html>

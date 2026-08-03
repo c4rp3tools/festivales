@@ -1,0 +1,27 @@
+{
+  "name": "Festivales con acampada · 2026",
+  "short_name": "Festivales c",
+  "description": "Aplicación web progresiva",
+  "start_url": "/htmltopwa/index.html",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#f7f4ec",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/htmltopwa/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/htmltopwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/htmltopwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
