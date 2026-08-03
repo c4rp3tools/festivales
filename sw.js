@@ -1,13 +1,13 @@
-const CACHE_NAME = 'Festivales-con-acampada-2026-v2';
+const CACHE_NAME = 'Festivales-con-acampada-2026-v1';
 const BASE_PATH = '/festivales/';
 
 const urlsToCache = [
   BASE_PATH,
   BASE_PATH + 'index.html',
   BASE_PATH + 'manifest.json',
-  BASE_PATH + 'icon-72.png',
-  BASE_PATH + 'icon-192.png',
-  BASE_PATH + 'icon-512.png'
+  BASE_PATH + 'festicon-72.png',
+  BASE_PATH + 'festicon-192.png',
+  BASE_PATH + 'festicon-512.png'
 ];
 
 self.addEventListener('install', event => {
