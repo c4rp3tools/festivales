@@ -1,5 +1,5 @@
 const CACHE_NAME = 'Festivales-con-acampada-2026-v1';
-const BASE_PATH = '/htmltopwa/';
+const BASE_PATH = '/festivales/';
 
 const urlsToCache = [
   BASE_PATH,
